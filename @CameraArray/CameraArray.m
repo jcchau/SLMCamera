@@ -73,9 +73,7 @@ classdef CameraArray < Handle
             % ZENITH_ANGLE, AZIMUTH, and TILT define the new orientation.
             
             % calculate the lenspoint around which to rotate the camera
-            lenspoint = obj.pixel_array.centerpoint + ...
-                obj.lens_to_array_distance * ...
-                obj.pixel_array.plane_axes.normal();
+            lenspoint = obj.lenspoint();
             
             % Update the plane axes and the array's centerpoint to the new
             % orientation.
@@ -99,7 +97,17 @@ classdef CameraArray < Handle
                 obj.lens_to_array_distance * ...
                 obj.pixel_array.plane_axes.normal();
         end % function setLensPoint
-            
+        
+        function lp = lenspoint(obj)
+            % lenspoint Returns a 3-column row vector representing the
+            % coordinates of the lenspoint.  
+            lp = obj.pixel_array.centerpoint + ...
+                obj.lens_to_array_distance * ...
+                obj.pixel_array.plane_axes.normal();
+        end % function lenspoint
+        
+        a_tr = calculateTransmitterAreaReceived(obj, transmitter_polygon);
+        
     end % methods
     
     methods(Static)
