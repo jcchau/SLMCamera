@@ -64,6 +64,27 @@ classdef CameraArray < Handle
             end % if(nargin > 0)
         end % function CameraArray
         
+        %% Property access methods
+        function obj = set.lens_to_array_distance(obj, newval)
+            if(~isscalar(newval))
+                error('Property lens_to_array_distance must be scalar.');
+            end
+            if(~isreal(newval) || newval<0)
+                error('Property lens_to_array_distance must be a non-negative real number.');
+            end
+            
+            obj.lens_to_array_distance = newval;
+        end % function set.lens_to_array_distance
+        
+        function obj = set.pixel_array(obj, newval)
+            if(~isa(newval, 'RectangularArray'))
+                error('Property pixel_array must be a RectangularArray object.');
+            end
+            
+            obj.pixel_array = newval;
+        end % function set.pixel_array
+        
+        %% Methods to move the CameraArray
         function obj = setOrientation(obj, zenith_angle, azimuth, tilt)
             % setOrientation changes the orientation of the CameraArray
             % object while maintaining the position of the lenspoint.  
@@ -97,6 +118,8 @@ classdef CameraArray < Handle
                 obj.lens_to_array_distance * ...
                 obj.pixel_array.plane_axes.normal();
         end % function setLensPoint
+        
+        %% General methods
         
         function lp = lenspoint(obj)
             % lenspoint Returns a 3-column row vector representing the
