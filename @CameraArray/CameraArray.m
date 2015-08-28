@@ -1,4 +1,4 @@
-classdef CameraArray < Handle
+classdef CameraArray < handle
     % CAMERAARRAY Represents a unified camera (with both the pixel array
     % and the point representing the lens)
     %   Provides methods to move the camera as a connected unit.
@@ -135,11 +135,11 @@ classdef CameraArray < Handle
     
     methods(Static)
         function oa = genRotatedAxes(zenith_angle, azimuth, tilt)
-            axis_horizontal = rotateTo(zenith_angle, azimuth, tilt, ...
+            [h1, h2, h3] = rotateTo(zenith_angle, azimuth, tilt, ...
                 1, 0, 0);
-            axis_vertical = rotateTo(zenith_angle, azimuth, tilt, ...
+            [v1, v2, v3] = rotateTo(zenith_angle, azimuth, tilt, ...
                 0, 1, 0);
-            oa = OrthogonalAxes(axis_horizontal, axis_vertical);
+            oa = OrthogonalAxes([h1, h2, h3], [v1, v2, v3]);
         end % function genRotatedAxes
     end % methods(Static)
 end
