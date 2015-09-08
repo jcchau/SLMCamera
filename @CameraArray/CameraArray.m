@@ -65,7 +65,7 @@ classdef CameraArray < handle
         end % function CameraArray
         
         %% Property access methods
-        function obj = set.lens_to_array_distance(obj, newval)
+        function set.lens_to_array_distance(obj, newval)
             if(~isscalar(newval))
                 error('Property lens_to_array_distance must be scalar.');
             end
@@ -76,7 +76,7 @@ classdef CameraArray < handle
             obj.lens_to_array_distance = newval;
         end % function set.lens_to_array_distance
         
-        function obj = set.pixel_array(obj, newval)
+        function set.pixel_array(obj, newval)
             if(~isa(newval, 'RectangularArray'))
                 error('Property pixel_array must be a RectangularArray object.');
             end
