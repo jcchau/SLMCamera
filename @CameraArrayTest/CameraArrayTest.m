@@ -93,6 +93,71 @@ classdef CameraArrayTest < matlab.unittest.TestCase
             catch
             end
         end % function testSetLensToArrayDistanceVector
+        
+        %% preclipPolygon
+        function testPreclipPolygonSimple(tc)
+            [~, lens_to_array_distance, ...
+                ~, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template] = ...
+                CameraArrayTest.genCameraArrayParameters();
+            
+            % set the lenspoint and zenith_angle so that I can personally
+            % calculate the expected result.
+            lenspoint = [0,0,0];
+            zenith_angle = 0;
+            
+            obj = CameraArray(lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, ...
+                nrows, ncols, pixel_template);
+            
+            % generate the polygon that crosses the xy-plane
+            % intersects the xy-plane at [2.5, +/-1, 0]
+            polygon_orig_matrix = [2, -1, 0.5; ...
+                2, 1, 0.5; ...
+                3, 1, -0.5; ...
+                3, -1, -0.5];
+            
+            polygon_orig = Polygon(polygon_orig_matrix);
+            
+            poly_plane = polygon_orig.getPlane();
+            
+            polyout = obj.preclipPolygon(polygon_orig);
+            
+            polyout_matrix = polyout.toMatrix();
+            
+            nvectors_out = size(polyout_matrix, 1);
+            
+            for ii = 1:nvectors_out
+                tc.verifyGreaterThan(polyout_matrix(ii,3), 0, ...
+                    'The clipped polygon should not have vertices below the xy-plane.');
+            end % for ii
+            
+            if(nvectors_out > 4)
+                % in case an extra vertex was added to close the polygon
+                tc.verifyEqual(polyout_matrix(1,:), polyout_matrix(end,:));
+                
+                % remove the extra vertex
+                polyout_matrix = polyout_matrix(1:end-1, :);
+                nvectors_out = size(polyout_matrix, 1);
+            end % if(nvectors_out > 4)
+            
+            tc.verifyEqual(nvectors_out, 4, ...
+                'The clipped polygon should only have 4 vertices');
+            
+            % Ensure that we still have the two vertices that should be
+            % kept
+            tc.verifyTrue(...
+                any(ismember(polyout_matrix, [2, -1, 0.5], 'rows')), ...
+                'preclipPolygon should have kept vertex [2, -1, 0.5].');
+            tc.verifyTrue(...
+                any(ismember(polyout_matrix, [2, 1, 0.5], 'rows')), ...
+                'preclipPolygon should have kept vertex [2, 1, 0.5].');
+            
+            % TODO: more tests that the polygons are (approximately) eqaul
+            % are needed
+        end % function testPreclipPolygonSimple
     end % methods(Test)
     
     methods(Static)
