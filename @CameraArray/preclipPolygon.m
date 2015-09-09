@@ -6,7 +6,7 @@ function polyout = preclipPolygon(obj, polyin)
 % onto the image plane to ensure that all remaining vertices form rays
 % through the lenspoint that intersect the image plane.  
 %
-% POLYOUT = preclipPolygon(OBJ, POLYIN, CLIP_HALF_ANGLE)
+% POLYOUT = preclipPolygon(OBJ, POLYIN)
 %
 % OBJ is the CameraArray object.
 % POLYIN is the polygon representing the object in the scene to be imaged.
