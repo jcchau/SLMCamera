@@ -123,7 +123,10 @@ classdef CameraArrayTest < matlab.unittest.TestCase
             
             poly_plane = polygon_orig.getPlane();
             
-            polyout = obj.preclipPolygon(polygon_orig);
+            [polyout, isvalid] = obj.preclipPolygon(polygon_orig);
+            
+            tc.verifyTrue(isvalid, ...
+                'The clipped polygon should be valid in this case.');
             
             polyout_matrix = polyout.toMatrix();
             
@@ -157,7 +160,38 @@ classdef CameraArrayTest < matlab.unittest.TestCase
             
             % TODO: more tests that the polygons are (approximately) eqaul
             % are needed
+            
         end % function testPreclipPolygonSimple
+        
+        function testPreclipPolygonDiscardAll(tc)
+            % testPreclipPolygonDiscardAll checks that the returned isvalid
+            % is false when the entire polygon is discarded.
+            
+            [~, lens_to_array_distance, ...
+                ~, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template] = ...
+                CameraArrayTest.genCameraArrayParameters();
+            
+            % set the lenspoint and zenith_angle so that I can personally
+            % calculate the expected result.
+            lenspoint = [0,0,0];
+            zenith_angle = 0;
+            
+            obj = CameraArray(lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, ...
+                nrows, ncols, pixel_template);
+            
+            % create a polygon with all vertices on the side of the plane
+            % to be removed in clipping.
+            polyin_matrix = [1, 0, -1; 1 1, -1; 2, 0, -1];
+            polyin = Polygon(polyin_matrix);
+            
+            [~, isvalid] = obj.preclipPolygon(polyin);
+            
+            tc.verifyFalse(isvalid, 'isvalid should be false.');            
+        end % function testPreclipPolygonDiscardAll
     end % methods(Test)
     
     methods(Static)

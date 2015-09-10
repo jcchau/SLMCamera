@@ -129,7 +129,7 @@ classdef CameraArray < handle
                 obj.pixel_array.plane_axes.normal();
         end % function lenspoint
         
-        polyout = preclipPolygon(obj, polyin)
+        [polyout, isvalid] = preclipPolygon(obj, polyin)
         
         a_tr = calculateTransmitterAreaReceived(obj, transmitter_polygon);
         

@@ -1,4 +1,4 @@
-function polyout = preclipPolygon(obj, polyin)
+function [polyout, isvalid] = preclipPolygon(obj, polyin)
 % PRECLIPPOLYGON Pre-clips a polygon, ensuring that the polygon remains
 % within clip_half_angle.  
 %
@@ -6,7 +6,7 @@ function polyout = preclipPolygon(obj, polyin)
 % onto the image plane to ensure that all remaining vertices form rays
 % through the lenspoint that intersect the image plane.  
 %
-% POLYOUT = preclipPolygon(OBJ, POLYIN)
+% [POLYOUT, ISVALID] = preclipPolygon(OBJ, POLYIN)
 %
 % OBJ is the CameraArray object.
 % POLYIN is the polygon representing the object in the scene to be imaged.
@@ -21,7 +21,7 @@ clip_plane_point = obj.pixel_array.centerpoint + ...
 clip_plane = Plane(clip_plane_point, clip_plane_normal);
 
 % then perform the clipping
-polyout = clip_plane.clipPolygon(polyin);
+[polyout, isvalid] = clip_plane.clipPolygon(polyin);
 
 end
 
