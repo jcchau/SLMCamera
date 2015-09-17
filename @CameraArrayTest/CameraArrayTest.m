@@ -21,34 +21,11 @@ classdef CameraArrayTest < matlab.unittest.TestCase
                 nrows, ncols, pixel_template);
             
             %% verify the properties
-            
-            tc.verifyEqual(obj.lens_to_array_distance, ...
-                lens_to_array_distance);
-            
-            [localZ(1,1), localZ(1,2), localZ(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 0, 0, 1);
-            [localX(1,1), localX(1,2), localX(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 1, 0, 0);
-            [localY(1,1), localY(1,2), localY(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 0, 1, 0);
-            
-            centerpoint = lenspoint - lens_to_array_distance * localZ;
-            tc.verifyLessThan(norm(obj.pixel_array.centerpoint - ...
-                centerpoint), 1e-10);
-            
-            tc.verifyLessThan(norm(...
-                obj.pixel_array.plane_axes.horizontal - localX), 1e-10);
-            tc.verifyLessThan(...
-                norm(obj.pixel_array.plane_axes.vertical - localY), 1e-10);
-            
-            tc.verifyEqual(obj.pixel_array.element_width, element_width);
-            tc.verifyEqual(obj.pixel_array.element_height, element_height);
-            
-            tc.verifyEqual(obj.pixel_array.nrows, nrows);
-            tc.verifyEqual(obj.pixel_array.ncols, ncols);
-            
-            tc.verifyEqual(obj.pixel_array.polygon_template.toMatrix(), ...
-                pixel_template.toMatrix());
+            CameraArrayTest.verifyProperties(tc, obj, ...
+                lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template);
         end % testConstructorHappy
         
         function testConstructorDefaultPixelTemplate(tc)
@@ -69,40 +46,18 @@ classdef CameraArrayTest < matlab.unittest.TestCase
             %% verify the properties
             % same tests as in testConstructorHappy
             
-            tc.verifyEqual(obj.lens_to_array_distance, ...
-                lens_to_array_distance);
-            
-            [localZ(1,1), localZ(1,2), localZ(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 0, 0, 1);
-            [localX(1,1), localX(1,2), localX(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 1, 0, 0);
-            [localY(1,1), localY(1,2), localY(1,3)] = ...
-                rotateTo(zenith_angle, azimuth, tilt, 0, 1, 0);
-            
-            centerpoint = lenspoint - lens_to_array_distance * localZ;
-            tc.verifyLessThan(norm(obj.pixel_array.centerpoint - ...
-                centerpoint), 1e-10);
-            
-            tc.verifyLessThan(norm(...
-                obj.pixel_array.plane_axes.horizontal - localX), 1e-10);
-            tc.verifyLessThan(...
-                norm(obj.pixel_array.plane_axes.vertical - localY), 1e-10);
-            
-            tc.verifyEqual(obj.pixel_array.element_width, element_width);
-            tc.verifyEqual(obj.pixel_array.element_height, element_height);
-            
-            tc.verifyEqual(obj.pixel_array.nrows, nrows);
-            tc.verifyEqual(obj.pixel_array.ncols, ncols);
-            
-            % check that the pixel_template fills the pixel
-            pixel_template_matrix_expected = ...
+            % the default pixel_template should fill the pixel
+            pixel_template_expected = Polygon(...
                 [0, 0, 0; ...
                 0, element_height, 0; ...
                 element_width, element_height, 0; ...
-                element_width, 0, 0];
-            tc.verifyEqual(obj.pixel_array.polygon_template.toMatrix(), ...
-                pixel_template_matrix_expected);
+                element_width, 0, 0]);
             
+            CameraArrayTest.verifyProperties(tc, obj, ...
+                lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template_expected);
         end % function testConstructorDefaultPixelTemplate
         
         %% property access methods
@@ -372,6 +327,53 @@ classdef CameraArrayTest < matlab.unittest.TestCase
                 element_height * normalized_pixel_template(:,2), ...
                 zeros(size(normalized_pixel_template,1), 1));
         end % function genCameraArrayParameters
+        
+        function verifyProperties(tc, obj, ...
+                lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template)
+            % verifyProperties verifies that the properties of obj matches
+            % the specified values.
+            %
+            % verifyProperties(TC, OBJ, LENSPOINT, LENS_TO_ARRAY_DISTANCE,
+            %   ZENITH_ANGLE, AZIMUTH, TILT, ELEMENT_WIDTH, ELEMENT_HEIGHT,
+            %   NROWS, NCOLS, PIXEL_TEMPLATE)
+            %
+            % TC is the TestCase object.
+            % OBJ is the CameraArray object.
+            % LENSPOINT, LENS_TO_ARRAY_DISTANCE, ZENITH_ANGLE, AZIMUTH,
+            %   TILT, ELEMENT_WIDTH, ELEMENT_HEIGHT, NROWS, NCOLS, and
+            %   PIXEL_TEMPLATE are 
+            
+            tc.verifyEqual(obj.lens_to_array_distance, ...
+                lens_to_array_distance);
+            
+            [localZ(1,1), localZ(1,2), localZ(1,3)] = ...
+                rotateTo(zenith_angle, azimuth, tilt, 0, 0, 1);
+            [localX(1,1), localX(1,2), localX(1,3)] = ...
+                rotateTo(zenith_angle, azimuth, tilt, 1, 0, 0);
+            [localY(1,1), localY(1,2), localY(1,3)] = ...
+                rotateTo(zenith_angle, azimuth, tilt, 0, 1, 0);
+            
+            centerpoint = lenspoint - lens_to_array_distance * localZ;
+            tc.verifyLessThan(norm(obj.pixel_array.centerpoint - ...
+                centerpoint), 1e-10);
+            
+            tc.verifyLessThan(norm(...
+                obj.pixel_array.plane_axes.horizontal - localX), 1e-10);
+            tc.verifyLessThan(...
+                norm(obj.pixel_array.plane_axes.vertical - localY), 1e-10);
+            
+            tc.verifyEqual(obj.pixel_array.element_width, element_width);
+            tc.verifyEqual(obj.pixel_array.element_height, element_height);
+            
+            tc.verifyEqual(obj.pixel_array.nrows, nrows);
+            tc.verifyEqual(obj.pixel_array.ncols, ncols);
+            
+            tc.verifyEqual(obj.pixel_array.polygon_template.toMatrix(), ...
+                pixel_template.toMatrix());
+        end % function verifyProperties
     end % methods(Static)
     
 end
