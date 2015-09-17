@@ -340,6 +340,9 @@ classdef CameraArrayTest < matlab.unittest.TestCase
         end % function testCalculateTransmitterAreaReceivedWholeTx
         
         testCalculateTransmitterAreaReceivedHalfFillFactor(tc)
+        
+        testCalculateTransmitterAreaReceivedPartialView(tc)
+    
     end % methods(Test)
     
     methods(Static)
