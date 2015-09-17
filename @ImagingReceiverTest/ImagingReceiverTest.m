@@ -57,6 +57,18 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
                 pixel_template_expected);
         end % function testConstructorDefaultPixelTemplate
         
+        function testConstructorNoSuperconstructorArgs(tc)
+            % testConstructorNoSuperconstructorArgs tries to call the
+            % constructor with no arguments for the superconstructor
+            % (CameraArray)
+            
+            r_aperture = rand()/rand();
+            
+            tc.verifyError(@() ImagingReceiver(r_aperture), ...
+                'ImagingReceiver:ImagingReceiver:notEnoughInputs', ...
+                'Constructor should not accept just one argument.');
+                
+        end % function testConstructorNoSuperconstructorArgs
     end % methods(Test)
     
     methods(Static)
