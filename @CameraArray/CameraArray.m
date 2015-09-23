@@ -133,6 +133,8 @@ classdef CameraArray < handle
         
         a_tr = calculateTransmitterAreaReceived(obj, transmitter_polygon);
         
+        [l, cos_theta, cos_phi] = calculateFineRelativePosition(obj, ...
+            pixel_indices, transmitter_plane)
     end % methods
     
     methods(Static)

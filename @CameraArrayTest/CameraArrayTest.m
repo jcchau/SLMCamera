@@ -296,6 +296,149 @@ classdef CameraArrayTest < matlab.unittest.TestCase
         
         testCalculateTransmitterAreaReceivedPartialView(tc)
     
+        %% calculateFineRelativePosition
+        function testCalculateFineRelativePositionParallelTxPlane(tc)
+            distance_txplane_lenspoint = 2;            
+            plane_tx = Plane([0, 0, distance_txplane_lenspoint], [0,0,-1]);
+            
+            [~, lens_to_array_distance, ...
+                ~, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                ~] = ...
+                CameraArrayTest.genCameraArrayParameters();
+            
+            % Place the CameraArray at the origin and ensure that it's
+            % pointing up so that the imaging plane is parallel to the
+            % transmitter plane
+            lenspoint = [0,0,0];
+            zenith_angle = 0;
+            
+            obj = CameraArray(lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols);
+            
+            num_elements = nrows*ncols;
+            % include the possibility of 0 elements
+            element_indices = randsample(num_elements, ...
+                randi([0,num_elements]));
+            
+            
+            [l, cos_theta, cos_phi] = obj.calculateFineRelativePosition(...
+                element_indices, plane_tx);
+            
+            % check that the returned matrices are the correct size
+            tc.verifyEqual(size(l), size(element_indices));
+            tc.verifyEqual(size(cos_theta), size(element_indices));
+            tc.verifyEqual(size(cos_phi), size(element_indices));
+            
+            % Since the aperture is parallel to plane_tx, cos_theta should
+            % equal cos_phi.  (Allow for rounding error)
+            absdiff_cos = abs(cos_theta - cos_phi);
+            tc.verifyTrue(all(absdiff_cos < 1e-10), ...
+                'cos_theta should equal cos_phi for all elements.');
+            
+            %% check distance l.
+            magnification = ...
+                distance_txplane_lenspoint/lens_to_array_distance;
+            [row, col] = ind2sub([nrows, ncols], element_indices);
+            element_centers = obj.pixel_array.getElementCenter(row, col);
+            
+            % since lenspoint is at the origin, the distance is just the
+            % square-root of the sum of the squares of the coordinate
+            % values.
+            dist_element_lenspoint = sqrt(sum(element_centers.^2, 2));
+            
+            l_expected = magnification .* dist_element_lenspoint;
+            abserr_l = abs(l - l_expected);
+            
+            tc.verifyLessThan(abserr_l, 1e-10, ...
+                'l should equal l_expected.');
+        end % function testCalculateFineRelativePositionParallelTxPlane
+        
+        function testCalculateFineRelativePositionNoIntersect(tc)
+            % testCalculateFineRelativePositionNoIntersect verifies that
+            % calculateFineRelativePosition produces an error when used for
+            % elements whose projected center does not intersect the
+            % transmitter plane.
+            
+            [lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template] = ...
+                CameraArrayTest.genCameraArrayParameters();
+            
+            obj = CameraArray(lenspoint, ...
+                lens_to_array_distance, zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template);
+            
+            % the direction the camera is pointing
+            direction_camera = lenspoint - obj.pixel_array.centerpoint; 
+            
+            % place plane_tx behind the camera to ensure no intersection
+            % where rand()/rand() is a random positive number
+            point_tx = lenspoint - rand()/rand() * direction_camera;
+            plane_tx = Plane(point_tx, direction_camera);
+            
+            % pick an arbitrary row and column
+            row = randi(nrows);
+            col = randi(ncols);
+            pixel_index = sub2ind([nrows, ncols], row, col);
+            
+            tc.verifyError(@() obj.calculateFineRelativePosition( ...
+                pixel_index, plane_tx), ...
+                'CameraArray:BadPixelProjection');
+            
+        end % function testCalculateFineRelativePositionNoIntersect
+        
+        function testCalculateFineRelativePositionIsParallel(tc)
+            % testCalculateFineRelativePositionIsParallel verifies that a
+            % warning is generated when the ray of the element projection
+            % is parallel to the transmitter plane.
+            
+            [lenspoint, lens_to_array_distance, ...
+                zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template] = ...
+                CameraArrayTest.genCameraArrayParameters();
+            
+            obj = CameraArray(lenspoint, ...
+                lens_to_array_distance, zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols, ...
+                pixel_template);
+            
+            % pick an arbitrary row and column
+            row = randi(nrows);
+            col = randi(ncols);
+            pixel_index = sub2ind([nrows, ncols], row, col);
+            
+            % the direction the pixel is pointing
+            direction_pixel = lenspoint - ...
+                obj.pixel_array.getElementCenter(row, col);
+            
+            % place plane_tx on the pixel's projection path
+            point_tx = lenspoint + rand()/rand() * direction_pixel;
+            
+            % pick a normal that's perpendicular to direction_pixel
+            normal_tx = rand(1,3);
+            normal_tx = normal_tx - dot(normal_tx, direction_pixel) .* ...
+                direction_pixel ./ norm(direction_pixel).^2;
+            
+            plane_tx = Plane(point_tx, normal_tx);
+            
+            try
+                tc.verifyWarning(@() obj.calculateFineRelativePosition( ...
+                    pixel_index, plane_tx), ...
+                    'CameraArray:ParallelPixelProjection');
+            catch me
+                % If the above failed because of no intersection, also
+                % okay.
+                tc.verifyEqual(me.identifier, ...
+                    'CameraArray:BadPixelProjection');
+            end
+            
+        end % function testCalculateFineRelativePositionIsParallel
+        
     end % methods(Test)
     
     methods(Static)
