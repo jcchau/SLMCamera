@@ -48,6 +48,16 @@ function [l, cos_theta, cos_phi] = ...
 % See also find, ind2sub, sub2ind,
 % CameraArray.calculateTransmitterAreaReceived.
 
+if(~isa(obj, 'CameraArray'))
+    error('OBJ must be a CameraArray object.');
+end
+if(~iscolumn(pixel_indices))
+    error('PIXEL_INDICES must be a column vector.');
+end
+if(~isa(transmitter_plane, 'Plane'))
+    error('TRANSMITTER_PLANE must be a Plane object.');
+end
+
 [row, col] = ind2sub( ...
     [obj.pixel_array.nrows, obj.pixel_array.ncols], ...
     pixel_indices);
