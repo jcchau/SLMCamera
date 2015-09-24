@@ -323,11 +323,12 @@ classdef CameraArrayTest < matlab.unittest.TestCase
                 randi([0,num_elements]));
             
             
-            [l, cos_theta, cos_phi] = obj.calculateFineRelativePosition(...
-                element_indices, plane_tx);
+            [l_squared, cos_theta, cos_phi] = ....
+                obj.calculateFineRelativePosition(element_indices, ...
+                plane_tx);
             
             % check that the returned matrices are the correct size
-            tc.verifyEqual(size(l), size(element_indices));
+            tc.verifyEqual(size(l_squared), size(element_indices));
             tc.verifyEqual(size(cos_theta), size(element_indices));
             tc.verifyEqual(size(cos_phi), size(element_indices));
             
@@ -349,10 +350,10 @@ classdef CameraArrayTest < matlab.unittest.TestCase
             dist_element_lenspoint = sqrt(sum(element_centers.^2, 2));
             
             l_expected = magnification .* dist_element_lenspoint;
-            abserr_l = abs(l - l_expected);
+            abserr_l = abs(sqrt(l_squared) - l_expected);
             
             tc.verifyLessThan(abserr_l, 1e-10, ...
-                'l should equal l_expected.');
+                'sqrt(l_squared) should equal l_expected.');
         end % function testCalculateFineRelativePositionParallelTxPlane
         
         function testCalculateFineRelativePositionNoIntersect(tc)

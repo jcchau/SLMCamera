@@ -1,11 +1,11 @@
-function [l, cos_theta, cos_phi] = ...
+function [l_squared, cos_theta, cos_phi] = ...
         calculateFineRelativePosition(obj, pixel_indices, ...
         transmitter_plane)
 % calculateFineRelativePosition calculates the distance and
 % relative angles between the pixels of the ImagingReceiver and
 % the transmitter.  
 %
-% [L, COS_THETA, COS_PHI] = calculateFineRelativePosition( ...
+% [L_SQUARED, COS_THETA, COS_PHI] = calculateFineRelativePosition( ...
 %   OBJ, PIXEL_INDICES, TRANSMITTER_PLANE)
 %
 % OBJ is the ImagingReceiver object.
@@ -24,12 +24,12 @@ function [l, cos_theta, cos_phi] = ...
 %   obtained by calling the getPlane method of the
 %   transmitter's Polygon object.  
 %
-% L, COS_THETA, and COS_PHI are each column vectors where each
+% L_SQUARED, COS_THETA, and COS_PHI are each column vectors where each
 %   row corresponds to the result for the element specified by
 %   the same row in PIXEL_INDICES.
 %
-% L is the distance between OBJ.lenspoint() and the projected
-%   center of the specified pixel onto the TRANSMITTER_PLANE.  
+% L_SQUARED is the square of the distance between OBJ.lenspoint() and the
+%   projected center of the specified pixel onto the TRANSMITTER_PLANE.  
 % COS_THETA is the cosine of the angle between the normal of
 %   the TRANSMITTER_PLANE and the line that connects the
 %   lenspoint to the projected center of the specified pixel on
@@ -40,8 +40,8 @@ function [l, cos_theta, cos_phi] = ...
 %   camera is pointing and the line from the lenspoint to the
 %   projected center of the specified pixel.  
 %
-% This method returns COS_THETA and COS_PHI instead of THETA
-% and PHI because it saves a step to compute and because it's
+% This method returns L_SQUARED, COS_THETA, and COS_PHI instead of L,
+% THETA, and PHI because it saves a step to compute and because it's
 % what we'll use to compute the gains from each transmitter to
 % each pixel anyway.  
 %
@@ -88,8 +88,11 @@ if(any(is_parallel))
     % regardless of what value of L is computed.
 end
 
-% the scalar distance from lenspoint to the projected center
-l = sqrt(sum((projected_center - replicated_lenspoint).^2, 2));
+% the squared scalar distance from lenspoint to the projected center
+% Usually, distance is calculated as the sqrt of the sum of squares of the
+% displacement in each dimenson; the sqrt is omitted here to keep the
+% square.
+l_squared = sum((projected_center - replicated_lenspoint).^2, 2);
 
 % normalize projection_direction so that we can use the
 % dot-product to determine the cosine of theta and phi.
