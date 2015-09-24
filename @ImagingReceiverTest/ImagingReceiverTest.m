@@ -64,8 +64,11 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
             tc.verifyError(@() ImagingReceiver(r_aperture), ...
                 'ImagingReceiver:ImagingReceiver:notEnoughInputs', ...
                 'Constructor should not accept just one argument.');
-                
         end % function testConstructorNoSuperconstructorArgs
+        
+        %% calculateTransmitterToPixelGain
+        testCalculateTransmitterToPixelGainOverAllPixels(tc)
+        
         
     end % methods(Test)
     

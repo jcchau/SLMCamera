@@ -45,6 +45,8 @@ classdef ImagingReceiver < CameraArray
             end
         end % function ImagingReceiver
         
+        gains = calculateTransmitterToPixelGain(obj, transmitter_polygon)
+        
     end % methods
     
 end
