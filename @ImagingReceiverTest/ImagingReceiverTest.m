@@ -69,7 +69,64 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
         %% calculateTransmitterToPixelGain
         testCalculateTransmitterToPixelGainOverAllPixels(tc)
         
-        
+        function testCalculateTransmitterToPixelGainPerfectAlignment(tc)
+            % In this test case, the transmitter is only seen by one pixel
+            % on the receiver such that theta and phi are exactly 0.  This
+            % allows us to precisely compute the expected gain for
+            % verification.  
+            %
+            % The only error (difference) should be due to
+            % precision/rounding errors.  
+            
+            tx_height = 2;
+            tx_side = 10e-3;
+            poly_tx = Polygon( ...
+                [-tx_side/2, -tx_side/2, tx_height; ...
+                -tx_side/2, tx_side/2, tx_height; ...
+                tx_side/2, tx_side/2, tx_height; ...
+                tx_side/2, -tx_side/2, tx_height]);
+            
+            r_aperture = 12.7e-3;   % 1 inch diameter
+            lenspoint = [0,0,0];
+            lens_to_array_distance = 20e-3;
+            
+            % set element_width and element_height to equal the width of
+            % the transmitter image
+            element_width = tx_side * lens_to_array_distance / tx_height;
+            element_height = element_width;
+            
+            % surround the central pixel with pixels that should have zero
+            % gain so we can check that too.
+            nrows = 3;
+            ncols = 3;
+            
+            zenith_angle = 0;
+            azimuth = 0;
+            tilt = 0;
+            
+            % calculate the expected gain: A_r / pi / l^2
+            gain_expected = r_aperture^2 / tx_height^2;
+            
+            ir = ImagingReceiver(r_aperture, lenspoint, ...
+                lens_to_array_distance, zenith_angle, azimuth, tilt, ...
+                element_width, element_height, nrows, ncols);
+            
+            gains = ir.calculateTransmitterToPixelGain(poly_tx);
+            
+            tc.verifyEqual(size(gains), [nrows, ncols], ...
+                'The returned matrix gains is not the correct size.');
+            
+            tc.verifyGreaterThanOrEqual(gains, 0, ...
+                'None of the gains should be negative.');
+            
+            tc.verifyEqual(gains(2,2), gain_expected, 'RelTol', 1e-10);
+            
+            % Check that aside from cell (2,2), all gains are zero
+            matrix_expected = zeros(nrows, ncols);
+            matrix_expected(2,2) = gains(2,2);
+            tc.verifyEqual(gains, matrix_expected, ...
+                'The gains for all other elements should be exactly zero.')
+        end % function testCalculateTransmitterToPixelGainPerfectAlignment
     end % methods(Test)
     
     methods(Static)
