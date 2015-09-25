@@ -118,6 +118,8 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
             
             tc.verifyGreaterThanOrEqual(gains, 0, ...
                 'None of the gains should be negative.');
+            tc.verifyLessThanOrEqual(gains, 1, ...
+                'None of the gains greater than unity.');
             
             tc.verifyEqual(gains(2,2), gain_expected, 'RelTol', 1e-10);
             
