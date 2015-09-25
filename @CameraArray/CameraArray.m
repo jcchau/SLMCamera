@@ -32,7 +32,7 @@ classdef CameraArray < handle
             % LENS_TO_ARRAY_DISTANCE is the distance between LENSPOINT and
             %   the plane of the pixel array
             % ZENITH_ANGLE, AZIMUTH, and TILT specify the orientation of
-            %   the camera (about LENSPOINT).
+            %   the camera (about LENSPOINT) in radians.
             % ELEMENT_WIDTH and ELEMENT_HEIGHT specify the dimension of
             %   each element in the array.
             % NROWS and NCOLS specify the number of rows and columns in the
@@ -91,7 +91,8 @@ classdef CameraArray < handle
             %
             % OBJ = setOrientation(OBJ, ZENITH_ANGLE, AZIMUTH, TILT)
             %
-            % ZENITH_ANGLE, AZIMUTH, and TILT define the new orientation.
+            % ZENITH_ANGLE, AZIMUTH, and TILT define the new orientation in
+            % radians. 
             
             % calculate the lenspoint around which to rotate the camera
             lenspoint = obj.lenspoint();
