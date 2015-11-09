@@ -35,6 +35,20 @@ c_precomputed = a_r/(pi*a_t);
 %% calculate the remaining factors in the gain formula
 
 a_tr = obj.calculateTransmitterAreaReceived(transmitter_polygon);
+% !!!QUIRK!!!
+% When the argument for method find is a row vector, find returns a row
+% vector instead of the regular column vector.
+% When indices_receiving_pixels is a row vector, it triggers an error in
+% obj.calculateFineRelativePosition.
+% Furthermore, even when indices_receiving_pixels is converted to a column
+% vector, the fact that a_tr is a row vector triggers an error on the last
+% command to calculate the variable gains.
+% To work around this problem, convert a_tr to a column vector if it is a
+% row vector.
+if(isrow(a_tr))
+    a_tr = a_tr(:);
+end
+
 indices_receiving_pixels = find(a_tr > 0);
 
 [l_squared, cos_theta, cos_phi] = obj.calculateFineRelativePosition( ...
