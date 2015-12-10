@@ -46,7 +46,10 @@ classdef ImagingReceiver < CameraArray
         end % function ImagingReceiver
         
         gains = calculateTransmitterToPixelGain(obj, transmitter_polygon)
-        
     end % methods
     
+    methods(Static)
+        diffent = calculateDiffEntropyOfOutputForUniformInput( ...
+            S, SH, x_max, variance_bg, variance_t)
+    end % methods(Static)
 end
