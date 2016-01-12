@@ -49,7 +49,7 @@ classdef ImagingReceiver < CameraArray
     end % methods
     
     methods(Static)
-        diffent = calculateDiffEntropyOfOutputForUniformInput( ...
+        de = calculateDiffEntropyOfOutputForUniformInput( ...
             S, SH, x_max, variance_bg, variance_t)
         
         li = convertToLinearIndex(weights, subs)
