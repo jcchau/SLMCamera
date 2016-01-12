@@ -15,6 +15,9 @@ function li = convertToLinearIndex(weights, subs)
 %   each row is a set of matrix subscript indices.  
 %
 % WARNING: this method is not designed to handle empty matrices.
+%
+% WARNING: This method assumes that subscript indices SUBS are valid (and
+% for efficiency, does not check).  
 
 % Reference:
 % http://stackoverflow.com/questions/10146082/indexing-of-unknown-dimensional-matrix
