@@ -51,7 +51,10 @@ PMF_BINS_PER_DIMENSION = 100;
 %   w = normrnd(0,1,trials,5);
 %   Y = x * SH' + w;
 %   toc
-AVERAGE_TRIALS_PER_BIN = 10^6;
+
+AVERAGE_TRIALS_PER_BIN = 10^4; % temporarily reduce to shorten run time
+%AVERAGE_TRIALS_PER_BIN = 10^6;
+
 % Do trials in batches to facilitate vectorization for computational
 % efficiency.
 TRIALS_PER_BATCH = 4096;
@@ -169,20 +172,23 @@ for ii = 1:batches
     index_y = ceil(bsxfun(@rdivide, ...
         bsxfun(@minus, y, y_min'), ...
         delta'));
-    
-    % And convert the matrix subscript indices to linear indices.
+
     % Discard any row of index_y for which any value is outside of the
     % range of valid indices for matrix hits: [1, PMF_BINS_PER_DIMENSION].
-    li_y = ImagingReceiver.convertToLinearIndex(indexing_weights, ...
-        index_y(all(index_y >= 1, 1) & ...
-            all(index_y <= PMF_BINS_PER_DIMENSION, 1), :));
+    index_y = index_y( ...
+        all(index_y >= 1, 2) & ...
+        all(index_y <= PMF_BINS_PER_DIMENSION, 2), :);
+    
+    % And convert the matrix subscript indices to linear indices.
+    li_y = ImagingReceiver.convertToLinearIndex( ...
+        indexing_weights, index_y);
     
     % Tally each hit in matrix hits
     for jj = li_y
         hits(jj) = hits(jj) + 1;
     end % for jj = li_y
     
-end % for ii
+end % for ii = 1:batches
 
 close(wb)
 
@@ -207,4 +213,3 @@ ent_quantized = -sum(pmf(:) .* log(pmf(:)));
 de = ent_quantized + sum(log(delta));
 
 end
-
