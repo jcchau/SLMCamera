@@ -51,6 +51,9 @@ classdef ImagingReceiver < CameraArray
     methods(Static)
         de = calculateDiffEntropyOfOutputForUniformInput( ...
             S, SH, x_max, variance_bg, variance_t)
+        [pmf, trials, hits] = generateReceivedPmfForUniformInput( ...
+            G, x_max, variance_noise_out, bins_per_dimension, ...
+            min_trials, trials_per_batch)
         
         li = convertToLinearIndex(weights, subs)
         weights = convertToLinearIndexWeights(mat_size)
