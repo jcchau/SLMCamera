@@ -104,8 +104,11 @@ y_min = -5 * stddev_noise_out; % n_r element column matrix
 y_max = Gx_max + 5*stddev_noise_out; % n_r element column matrix
 delta = (y_max-y_min) ./ bins_per_dimension;
 
-% Allocate a n_r dimension matrix to store the hit counts
-hits = zeros(repmat(bins_per_dimension, 1, n_r));
+% Allocate a n_r dimension matrix to store the hit counts.
+% The last dimension of 1 in the argument of zeros ensures that zeros does
+% not return a square matrix when n_r is 1 (and doesn't do anything
+% otherwise).
+hits = zeros([repmat(bins_per_dimension, 1, n_r), 1]);
 % In each dimension of y, each bin_i covers values of y in
 % (y_min + (i-1)*delta) < y <= (y_min + i*delta).  
 % As calculated in p.134 of my lab book #3, the index for each dimension
