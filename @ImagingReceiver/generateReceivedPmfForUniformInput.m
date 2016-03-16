@@ -170,9 +170,13 @@ for ii = 1:batches
         indexing_weights, index_y);
     
     % Tally each hit in matrix hits
-    for jj = li_y
-        hits(jj) = hits(jj) + 1;
-    end % for jj = li_y
+    % NOTE: if we do "for jj = li_y", it does NOT iterate through all of
+    % the elements of li_y, but instead just does one iteration in the
+    % loop, so it's necessary to do "for jj = 1:length(li_y)" instead.
+    for jj = 1:length(li_y)
+        index_bin = li_y(jj);
+        hits(index_bin) = hits(index_bin) + 1;
+    end % for jj = 1:length(li_y)
     
 end % for ii = 1:batches
 
