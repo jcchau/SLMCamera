@@ -144,7 +144,7 @@ for ii = 1:batches
     
     % In this vectorization, each row is a trial in the batch.  
     
-    x = rand(trials_per_batch, n_t);
+    x = x_max * rand(trials_per_batch, n_t);
     
     % Each row of w is the AWGN for a trial, where each column is the AWGN
     % for each dimension of y (i.e., for each receiver element).  
