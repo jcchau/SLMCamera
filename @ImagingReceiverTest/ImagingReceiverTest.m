@@ -171,6 +171,8 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
                 ['convertToLinearIndex did not return the same ' ...
                 'results as sub2ind.'])
         end
+        
+        testGenerateReceivedPmfForUniformInput1D(tc)
     end % methods(Test)
     
     methods(Static)
