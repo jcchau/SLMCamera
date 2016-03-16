@@ -90,6 +90,13 @@ if(~isscalar(trials_per_batch))
     error('Parameter TRIALS_PER_BATCH must be scalar.');
 end
 
+if(min_trials < 1)
+    error('Parameter MIN_TRIALS must be at least 1.');
+end
+if(trials_per_batch < 1)
+    error('Parameter TRIALS_PER_BATCH must be at least 1.');
+end
+
 %% initial setup of variables
 
 % noise standard deviation for each receiver element.
