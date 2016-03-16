@@ -173,6 +173,7 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
         end
         
         testGenerateReceivedPmfForUniformInput1D(tc)
+        testGenerateReceivedPmfForUniformInput1DNoSignal(tc)
     end % methods(Test)
     
     methods(Static)
