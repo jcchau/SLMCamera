@@ -128,7 +128,7 @@ trials = batches * trials_per_batch;
 
 % pre-compute the weights needed to convert a row of index_x into a linear
 % index (needed to index elements in arbitrary-dimension matrices).
-indexing_weights = ImagingReceiver.convertToLinearIndexWeights(size(hits));
+indexing_weights = MIMOCapacity.convertToLinearIndexWeights(size(hits));
 
 %% calculate min_noise_to_delta_ratio
 % The worst ratio between stddev_noise_out and delta.
@@ -173,7 +173,7 @@ for ii = 1:batches
         all(index_y <= bins_per_dimension, 2), :);
     
     % And convert the matrix subscript indices to linear indices.
-    li_y = ImagingReceiver.convertToLinearIndex( ...
+    li_y = MIMOCapacity.convertToLinearIndex( ...
         indexing_weights, index_y);
     
     % Tally each hit in matrix hits

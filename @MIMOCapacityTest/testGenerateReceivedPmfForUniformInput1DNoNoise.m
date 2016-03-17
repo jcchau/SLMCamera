@@ -1,6 +1,6 @@
 function testGenerateReceivedPmfForUniformInput1DNoNoise(tc)
 % testGenerateReceivedPmfForUniformInput1DNoNoise verifies that
-% ImagingReceiver.generateReceivedPmfForUniformInput works even when
+% MIMOCapacity.generateReceivedPmfForUniformInput works even when
 % variance_noise_out = 0.
 
 G = rand()./rand();
@@ -23,7 +23,7 @@ end
 %% run the method under test
 
 [pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
-    ImagingReceiver.generateReceivedPmfForUniformInput( ...
+    MIMOCapacity.generateReceivedPmfForUniformInput( ...
     G, x_max, variance_noise_out, bins_per_dimension, ...
     min_trials, trials_per_batch);
 
