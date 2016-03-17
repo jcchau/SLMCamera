@@ -177,6 +177,7 @@ classdef ImagingReceiverTest < matlab.unittest.TestCase
         testGenerateReceivedPmfForUniformInput1DNoNoise(tc)
         testGenerateReceivedPmfForUniformInput2D(tc)
         testGenerateReceivedPmfForUniformInput2DCorrelatedGNoNoise(tc)
+        testGenerateReceivedPmfForUniformInput3D(tc)
     end % methods(Test)
     
     methods(Static)
