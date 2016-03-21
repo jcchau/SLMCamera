@@ -26,9 +26,8 @@ function de = calculateDiffEntropyFromPmf(pmf, bin_size)
 % differential entropy.  This conversion is described in p.121 of lab book
 % #3 (Imaging Receivers & Photodetector Arrays).  
 
-if(isscalar(bin_size))
-    log_delta = log(bin_size);
-elseif(isvector(bin_size))
+if(isvector(bin_size))
+    % Also covers the case where bin_size is a scalar.
     log_delta = sum(log(bin_size));
 else
     error('BIN_SIZE must be a scalar or a vector.');
