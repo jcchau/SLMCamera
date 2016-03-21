@@ -3,7 +3,7 @@ function de = calculateDiffEntropyFromPmf(pmf, bin_size)
 % variable given its probability mass function (PMF) and the size of the
 % bin used to compute the PMF.  
 %
-%   [DE, DE_BITS] = calculateDiffEntropyFromPmf(PMF, BIN_SIZE)
+%   DE = calculateDiffEntropyFromPmf(PMF, BIN_SIZE)
 %
 % DE (scalar) is the differential entropy of the random variable in nats.  
 %
