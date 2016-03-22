@@ -15,6 +15,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testGenerateReceivedPmfForUniformInput3D(tc)
         
         testCalculateDiffEntropyFromPmf1DUniform(tc)
+        
+        testMinimumNeighborEmptyIn(tc)
     end % methods(Test)
     
 end

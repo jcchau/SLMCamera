@@ -16,7 +16,9 @@ function out = minimumNeighbor(in)
 % cell itself it it contains the minimum value).  
 
 if(isempty(in))
-    out = [];
+    % If the input is empty, return an empty matrix (with the same number
+    % of dimensions to avoid causing potential problems).
+    out = in;
 else
 
     %% set out equal in
