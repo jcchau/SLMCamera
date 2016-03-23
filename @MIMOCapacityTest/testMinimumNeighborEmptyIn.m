@@ -7,7 +7,7 @@ nd = randi([2,5]);
 % create an empty nd-dimension matrix
 in = zeros(zeros(1, nd));
 
-out = MIMOCapacity.minimumNeighbor(in);
+out = MIMOCapacity.minimumNeighbor(in, nd);
 
 tc.verifyTrue(isempty(out), ...
     'minimumNeighbor did not return an empty matrix.');
