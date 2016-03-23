@@ -78,7 +78,7 @@ for d = 1:num_dimensions
     
     % Index for everything one step before matindex along dimension d
     matindex_prev = repmat({':'}, 1, num_dimensions);
-    matindex_prev(d) = {1:last_index-1};
+    matindex_prev(d) = {1:last_index-2};
     
     % Index for everything one step after matindex along dimension d
     matindex_next = repmat({':'}, 1, num_dimensions);
