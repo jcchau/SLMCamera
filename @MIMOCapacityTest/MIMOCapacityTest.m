@@ -17,6 +17,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testCalculateDiffEntropyFromPmf1DUniform(tc)
         
         testMinimumNeighborEmptyIn(tc)
+        testMinimumNeighbor1DRow(tc)
+        testMinimumNeighbor1DCol(tc)
     end % methods(Test)
     
 end
