@@ -17,6 +17,8 @@ classdef MIMOCapacity
         
         out = minimumNeighbor(in, num_dimensions)
         out = maximumNeighbor(in)
+        
+        de = calculateMinimumDiffEntropyFromPmf(pmf, bin_size)
     end % methods(Static)
     
 end
