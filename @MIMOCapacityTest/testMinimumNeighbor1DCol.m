@@ -1,6 +1,6 @@
 function testMinimumNeighbor1DCol(tc)
-% testMinimumNeighbor1D verifies that MIMOCapacity.minimumNeighbor using a
-% random 1D (column vector) input.
+% testMinimumNeighbor1DCol verifies that MIMOCapacity.minimumNeighbor using
+% a random 1D (column vector) input.
 
 matlen = randi(5);
 
