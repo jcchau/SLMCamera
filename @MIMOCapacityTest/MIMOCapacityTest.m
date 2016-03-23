@@ -27,6 +27,7 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testMaximumNeighborEmptyIn(tc)
         testMaximumNeighbor1DCol(tc)
         testMaximumNeighbor1DRow(tc)
+        testMaximumNeighbor2DManual(tc)
     end % methods(Test)
     
 end
