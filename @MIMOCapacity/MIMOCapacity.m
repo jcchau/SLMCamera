@@ -16,6 +16,7 @@ classdef MIMOCapacity
         weights = convertToLinearIndexWeights(mat_size)
         
         out = minimumNeighbor(in, num_dimensions)
+        out = maximumNeighbor(in)
     end % methods(Static)
     
 end
