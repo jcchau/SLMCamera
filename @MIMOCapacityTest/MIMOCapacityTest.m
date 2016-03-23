@@ -19,6 +19,7 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testMinimumNeighborEmptyIn(tc)
         testMinimumNeighbor1DRow(tc)
         testMinimumNeighbor1DCol(tc)
+        testMinimumNeighborSingletonDimension(tc)
     end % methods(Test)
     
 end
