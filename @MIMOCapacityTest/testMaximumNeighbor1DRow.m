@@ -9,12 +9,14 @@ in = rand(1, matlen);
 out = MIMOCapacity.maximumNeighbor(in);
 
 %% compute the expected result
-expected_out = zeros(size(in));
 
-% Check each element against the next
-expected_out(1:end-1) = max(in(1:end-1), in(2:end));
+% start out with each element as its maximum
+expected_out = in;
 
-% And then check each maximum against the previous element
+% Then replace each "maximum" with the next element if it's bigger
+expected_out(1:end-1) = max(expected_out(1:end-1), in(2:end));
+
+% Or its previous element if it's bigger.
 expected_out(2:end) = max(expected_out(2:end), in(1:end-1));
 
 %% check
