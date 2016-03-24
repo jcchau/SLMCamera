@@ -32,6 +32,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testMaximumNeighbor3D(tc)
         
         testCalculateMinimumDiffEntropyFromPmfConvergesUniform(tc)
+        testCalculateMinimumDiffEntropyFromPmfConvergesGaussianEven(tc)
+        testCalculateMinimumDiffEntropyFromPmfConvergesGaussianOdd(tc)
     end % methods(Test)
     
 end
