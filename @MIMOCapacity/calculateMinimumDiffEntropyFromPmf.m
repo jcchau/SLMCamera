@@ -71,7 +71,8 @@ for d = 1:num_dimensions
     
     if(mod(num_bins_along_d, 2) == 0)
         % this dimension has an even number of bins
-        index_central_bins(d) = {[num_bins_along_d, num_bins_along_d+1]};
+        index_central_bins(d) = {[num_bins_along_d/2, ...
+            num_bins_along_d/2+1]};
     else
         % this dimension has an odd number of bins
         index_central_bins(d) = {(num_bins_along_d+1)/2};
@@ -87,8 +88,14 @@ pmax(index_central_bins{:}) = 2 .* pavg(index_central_bins{:}) - ...
 
 alpha = (pavg - pmin) ./ (pmax - pmin);
 
+% When (pmax-pmin) is 0, alpha is NaN.  In this case, the proportion of the
+% bin that is pmax vs pmin doesn't matter because pmax == pmin, so just set
+% alpha to 1 to avoid propagating NaN through to the calculated
+% differential entropy.  
+alpha(pmax==pmin) = 1;
+
 % FREE MEMORY: remove pavg from memory since it's no longer needed
-clear pavg
+%clear pavg
 
 % Drop zero values from pmax and pmin since zero-probability events don't
 % contribute to entropy.
@@ -96,13 +103,13 @@ clear pavg
 % (This also unrolls the matrices.)
 alpha_pmin = alpha(pmin>0);
 alpha_pmax = alpha(pmax>0);
-clear alpha % FREE MEMORY: alpha no longer needed
+%clear alpha % FREE MEMORY: alpha no longer needed
 
 pmin = pmin(pmin>0);
 pmax = pmax(pmax>0);
 
-de = bin_volume .* ( ...
+de = -bin_volume .* ( ...
     sum(alpha_pmax .* pmax .* log(pmax)) + ...
-    sum(alpha_pmin .* pmin .* log(pmin)) );
+    sum((1-alpha_pmin) .* pmin .* log(pmin)) );
 
 end
