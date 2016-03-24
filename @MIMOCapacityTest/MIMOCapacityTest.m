@@ -30,6 +30,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testMaximumNeighbor2DManual(tc)
         testMaximumNeighbor2DRandom(tc)
         testMaximumNeighbor3D(tc)
+        
+        testCalculateMinimumDiffEntropyFromPmfConvergesUniform(tc)
     end % methods(Test)
     
 end
