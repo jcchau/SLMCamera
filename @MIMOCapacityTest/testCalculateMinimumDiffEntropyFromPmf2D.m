@@ -4,7 +4,7 @@ function testCalculateMinimumDiffEntropyFromPmf2D(tc)
 % independent dimensions each with random standard deviation).  
 
 sigma = rand(1,2) ./ rand(1,2);
-y_max = 5 .* sigma;
+y_max = 6 .* sigma;
 y_min = -y_max;
 
 % From p.100 of lab book #3.
@@ -34,7 +34,12 @@ list_nbins = [ ...
     361, 324;
     361, 400];
 list_nbins = [ list_nbins;
-    ((21:31).^2)', ((22:32).^2)' ];
+    ((21:31).^2)', ((22:32).^2)';
+    1447, 1448;
+    2047, 2048;
+    2895, 2896;
+    4095, 4096;
+    5793, 5792];
 
 length_list_nbins = size(list_nbins,1);
 
@@ -74,6 +79,12 @@ diff_true_min = de_true - de_min;
 tc.verifyLessThan(diff_true_min(2:end), diff_true_min(1:end-1), ...
     ['As the number of bins increase, de_min should converge ' ...
     'toward de_true.']);
+
+% From the plot on p.19 in lab book #4, I expect the diff_true_min to be
+% well below 1e-4 for 4095x4096 bins.
+tc.verifyLessThan(diff_true_min(end), 1e-4, ...
+    sprintf('The tolerance should be < 1e-4 for %d bins.', ...
+    prod(list_nbins(end,:))));
 
 loglog(prod(list_nbins, 2), diff_true_min, '+-');
 xlabel('Number of bins')
