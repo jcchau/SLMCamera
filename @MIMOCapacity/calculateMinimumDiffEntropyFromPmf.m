@@ -95,7 +95,7 @@ alpha = (pavg - pmin) ./ (pmax - pmin);
 alpha(pmax==pmin) = 1;
 
 % FREE MEMORY: remove pavg from memory since it's no longer needed
-%clear pavg
+clear pavg
 
 % Drop zero values from pmax and pmin since zero-probability events don't
 % contribute to entropy.
@@ -103,7 +103,7 @@ alpha(pmax==pmin) = 1;
 % (This also unrolls the matrices.)
 alpha_pmin = alpha(pmin>0);
 alpha_pmax = alpha(pmax>0);
-%clear alpha % FREE MEMORY: alpha no longer needed
+clear alpha % FREE MEMORY: alpha no longer needed
 
 pmin = pmin(pmin>0);
 pmax = pmax(pmax>0);
