@@ -19,6 +19,8 @@ classdef MIMOCapacity
         out = maximumNeighbor(in)
         
         de = calculateMinimumDiffEntropyFromPmf(pmf, bin_size)
+        
+        de = calculateDiffEntropyOfGaussian(variance)
     end % methods(Static)
     
 end
