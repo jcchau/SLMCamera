@@ -1,4 +1,4 @@
-function [pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
+function [pmf, trials, y_min, y_max, hits] = ...
     generateReceivedPmfForUniformInput( ...
     G, x_max, variance_noise_out, bins_per_dimension, ...
     min_trials, trials_per_batch)
@@ -8,7 +8,7 @@ function [pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
 % Assume channel:
 % y = G*x + w
 %
-%   [PMF, TRIALS, MIN_NOISE_TO_DELTA_RATIO, Y_MIN, Y_MAX, HITS] = ...
+%   [PMF, TRIALS, Y_MIN, Y_MAX, HITS] = ...
 %       generateReceivedPmfForUniformInput( ...
 %       G, X_MAX, VARIANCE_NOISE_OUT, BINS_PER_DIMENSION, ...
 %       MIN_TRIALS, TRIALS_PER_BATCH)
@@ -18,17 +18,6 @@ function [pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
 %   of y, each bin_i covers values of y in
 %   (y_min + (i-1)*delta) < y <= (y_min + i*delta). 
 % TRIALS is a scalar for the number of trials simulated to compute the PMF.
-% MIN_NOISE_TO_DELTA_RATIO is min(sqrt(VARIANCE_NOISE_OUT)./DELTA) where
-%   DELTA is the step size for values of y between adjacent bins.
-%   MIN_NOISE_TO_DELTA_RATIO is the ratio between the standard deviation of
-%   the noise (specified by VARIANCE_NOISE_OUT) and the ADC step size
-%   simulated in this method.  Further details are in p.189-192 of lab
-%   book 3.  In the lab book, I determined that we need
-%   MIN_NOISE_TO_DELTA_RATIO >= 2.9 to ensure that the quantization noise
-%   artifact is insignificant (20dB below the actual noise) and that more
-%   conservatively, MIN_NOISE_TO_DELTA_RATIO >= 29 would ensure that the
-%   quantization noise artifact is 40dB below the actual noise.
-%   MIN_NOISE_TO_DELTA_RATIO is a scalar.
 % Y_MIN AND Y_MAX are n_r-element column vectors of the minimum and maximum
 %   values of y that are included in any bin of the calculated PMF. 
 % HITS is a matrix with the same size as PMF.  HITS is a count of how many
@@ -129,14 +118,6 @@ trials = batches * trials_per_batch;
 % pre-compute the weights needed to convert a row of index_x into a linear
 % index (needed to index elements in arbitrary-dimension matrices).
 indexing_weights = MIMOCapacity.convertToLinearIndexWeights(size(hits));
-
-%% calculate min_noise_to_delta_ratio
-% The worst ratio between stddev_noise_out and delta.
-% From p. 189-192 of lab book 3, the standard deviation of the resuting
-% quantization noise artifact (due to a limited number of bins in the
-% simulation) is delta/sqrt(12).  
-
-min_noise_to_delta_ratio = min(stddev_noise_out ./ delta);
 
 %% calculate the pmf of y through Monte Carlo simulation
 

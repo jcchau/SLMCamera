@@ -10,7 +10,7 @@ min_trials = 1e6 * log(4^2)^2; % 7.7e6
 
 %% run the method under test
 
-[pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
+[pmf, trials, y_min, y_max, hits] = ...
     MIMOCapacity.generateReceivedPmfForUniformInput( ...
     G, x_max, variance_noise_out, bins_per_dimension, min_trials);
 
@@ -33,11 +33,6 @@ total_hits = sum(sum(hits));
 tc.verifyEqual(total_hits, trials, ...
     ['With no noise, the total hits in all bins should equal the ' ...
     'number of trials.']);
-
-%% check min_noise_to_delta_ratio
-
-tc.verifyEqual(min_noise_to_delta_ratio, 0, ...
-    'Without noise, min_noise_to_delta_ratio should be 0.');
 
 %% compute the expected pmf
 % Non-diagonal elements are 0 because the two receivers always receive the

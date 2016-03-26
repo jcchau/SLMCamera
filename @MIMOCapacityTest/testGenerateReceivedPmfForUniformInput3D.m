@@ -13,7 +13,7 @@ trials_per_batch = 8192;
 
 %% run the method under test
 
-[pmf, trials, min_noise_to_delta_ratio, y_min, y_max, hits] = ...
+[pmf, trials, y_min, y_max, hits] = ...
     MIMOCapacity.generateReceivedPmfForUniformInput( ...
     G, x_max, variance_noise_out, bins_per_dimension, ...
     min_trials, trials_per_batch);
@@ -54,18 +54,9 @@ tc.verifyLessThanOrEqual(missed_hits, max_missed_hits, ...
     'but %d actually missed.'], ...
     expected_missed_hits, missed_hits));
 
-%% check min_noise_to_delta_ratio
-% expected value calculated according to p.191 of lab book 3.
-
-delta = (y_max - y_min) ./ bins_per_dimension;
-sigma_noise = sqrt(variance_noise_out);
-expected_noise_to_delta_ratio = sigma_noise ./ delta;
-
-tc.verifyEqual(min_noise_to_delta_ratio, ...
-    min(expected_noise_to_delta_ratio), ...
-    'min_noise_to_delta_ratio is not the expected value.');
-
 %% compute the expected PMF
+
+sigma_noise = sqrt(variance_noise_out);
 
 bin_boundaries = -5:7;
 pdf_y_1d = (normcdf(bin_boundaries, 0, sigma_noise(1)) - ...
