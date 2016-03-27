@@ -46,7 +46,15 @@ function [pmf, trials, y_min, y_max, hits] = ...
 
 % for trials_per_batch
 if(nargin < 6)
-    trials_per_batch = 4096;
+    % Select a default that's
+    % - big enough to fully/efficiently utilize the CPU(s),
+    % - is divisible in many ways, and
+    % - is not too big (to keep memory use small and to avoid extending the
+    %   computation time too long). 
+    % 45*2^15 performed better than 2^20 or 2^21 when tested using
+    % MIMOCapacityTest.testGenerateReceivedPmfForUniformInput23; tried 2^13
+    % to 2^25.
+    trials_per_batch = 1474560; % 45*2^15; 11.25 MiB. 
 end
 
 %% validate inputs and determine sizes

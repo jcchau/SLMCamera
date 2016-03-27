@@ -9,7 +9,7 @@ x_max = 2;
 variance_noise_out = [ 1; 1; 1 ];
 bins_per_dimension = 12; % each bin is unit big
 min_trials = 1e6 * log(12^3)^2; % 5.6e7
-trials_per_batch = 8192;
+trials_per_batch = 45*2^15;
 
 %% run the method under test
 
