@@ -24,6 +24,10 @@ classdef MIMOCapacity
         de = calculateDiffEntropyOfGaussian(variance)
         
         nbins = fillMaxNBins(max_nbins, dimensions)
+        
+        [nats, min_nats, variance_H, nbins, trials] = ...
+            calculateCapacityForUniformInput( ...
+            G, x_max, variance_noise_out, max_nbins, min_trials)
     end % methods(Static)
     
 end
