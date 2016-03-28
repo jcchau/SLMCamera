@@ -32,14 +32,15 @@ function [pmf, trials, y_min, y_max, hits] = ...
 %   variance of the independent AWGN received by each receiver.  
 % BINS_PER_DIMENSION a scalar positive integer that is the number of bins
 %   to use per dimension of the (PMF); i.e., into how many bins do we
-%   discretize the signal value of each receiver element.  
+%   discretize the signal value of each receiver element.  It may also be a
+%   row vector consisting of the number of bins for each dimension.  
 % MIN_TRIALS is a scalar for the minimum number of Monte Carlo trials that
 %   should be used to compute the PMF of y.  
 % TRIALS_PER_BATCH (optional, default=4096) is the number of trials to run
 %   together for vectorization.  
 %
 % WARNING: This function may require a lot of memory.  Approximately
-% 2 * (8 bytes * BINS_PER_DIMENSION^n_r):
+% 2 * (8 bytes * BINS_PER_DIMENSION^n_r) if BINS_PER_DIMENSION is scalar:
 % - Both PMF and HITS are each (8 bytes * BINS_PER_DIMENSION^n_r) bytes.
 
 %% set default for optional argument
@@ -77,9 +78,18 @@ if(any(variance_noise_out < 0))
         'parameter VARIANCE_NOISE_OUT.']);
 end
 
-if(~isscalar(bins_per_dimension))
-    error('Parameter BINS_PER_DIMENSION must be scalar.');
+if(any(bins_per_dimension < 1))
+    error(['Parameter BINS_PER_DIMENSION must be a whole number ' ...
+        '(or a row vector of whole numbers).']);
 end
+if(isscalar(bins_per_dimension))
+    bins_per_dimension = repmat(bins_per_dimension, 1, n_r);
+end
+if(~isequal(size(bins_per_dimension), [1, n_r]))
+    error(['Parameter BINS_PER_DIMENSION must be a n_r-element ' ...
+        'row vector.']);
+end
+
 if(~isscalar(min_trials))
     error('Parameter MIN_TRIALS must be scalar.');
 end
@@ -106,13 +116,13 @@ Gx_max = G * repmat(x_max, n_t, 1);
 % we clip the PMF of y from y_min to y_max in our appoximation
 y_min = -5 * stddev_noise_out; % n_r element column matrix
 y_max = Gx_max + 5*stddev_noise_out; % n_r element column matrix
-delta = (y_max-y_min) ./ bins_per_dimension;
+delta = (y_max-y_min) ./ bins_per_dimension';
 
 % Allocate a n_r dimension matrix to store the hit counts.
 % The last dimension of 1 in the argument of zeros ensures that zeros does
 % not return a square matrix when n_r is 1 (and doesn't do anything
 % otherwise).
-hits = zeros([repmat(bins_per_dimension, 1, n_r), 1]);
+hits = zeros([bins_per_dimension, 1]);
 % In each dimension of y, each bin_i covers values of y in
 % (y_min + (i-1)*delta) < y <= (y_min + i*delta).  
 % As calculated in p.134 of my lab book #3, the index for each dimension
@@ -125,7 +135,8 @@ trials = batches * trials_per_batch;
 
 % pre-compute the weights needed to convert a row of index_x into a linear
 % index (needed to index elements in arbitrary-dimension matrices).
-indexing_weights = MIMOCapacity.convertToLinearIndexWeights(size(hits));
+indexing_weights = MIMOCapacity.convertToLinearIndexWeights( ...
+    bins_per_dimension);
 
 %% calculate the pmf of y through Monte Carlo simulation
 
@@ -159,7 +170,8 @@ for ii = 1:batches
     % range of valid indices for matrix hits: [1, bins_per_dimension].
     index_y = index_y( ...
         all(index_y >= 1, 2) & ...
-        all(index_y <= bins_per_dimension, 2), :);
+        all(index_y <= ...
+        repmat(bins_per_dimension,size(index_y,1),1), 2), :);
     
     % And convert the matrix subscript indices to linear indices.
     li_y = MIMOCapacity.convertToLinearIndex( ...
