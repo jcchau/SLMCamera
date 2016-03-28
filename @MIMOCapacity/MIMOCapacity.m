@@ -22,6 +22,8 @@ classdef MIMOCapacity
         de = calculateMinimumDiffEntropyFromPmf(pmf, bin_size)
         
         de = calculateDiffEntropyOfGaussian(variance)
+        
+        nbins = fillMaxNBins(max_nbins, dimensions)
     end % methods(Static)
     
 end
