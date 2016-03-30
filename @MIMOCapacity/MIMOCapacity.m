@@ -28,6 +28,9 @@ classdef MIMOCapacity
         [nats, min_nats, variance_H, nbins, trials] = ...
             calculateCapacityForUniformInput( ...
             G, x_max, variance_noise_out, max_nbins, min_trials)
+        
+        variance = calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
+            pmf, num_trials)
     end % methods(Static)
     
 end

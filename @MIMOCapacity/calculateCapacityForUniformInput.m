@@ -69,16 +69,21 @@ bin_size = (y_max - y_min) ./ nbins';
 
 %% compute the outputs
 
+% h(y|x)
 h_y_given_x = MIMOCapacity.calculateDiffEntropyOfGaussian( ...
     variance_noise_out);
 
 % Computed according to p.199 of lab book #3 (Imaging Receivers &
 % Photodetector Arrays).
-variance_H = sum( pmf(:).*(1-pmf(:)) .* (-log(pmf(:))-1).^2 ./ n );
+variance_H = ...
+    MIMOCapacity.calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
+    pmf, trials);
 
+% max and min h(y)
 h_y = MIMOCapacity.calculateDiffEntropyFromPmf(pmf, bin_size);
 min_h_y = MIMOCapacity.calculateMinimumDiffEntropyFromPmf(pmf, bin_size);
 
+% I(y;x) = h(y) - h(y|x)
 nats = h_y - h_y_given_x;
 min_nats = min_h_y - h_y_given_x;
 
