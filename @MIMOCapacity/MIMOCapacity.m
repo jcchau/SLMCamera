@@ -34,6 +34,8 @@ classdef MIMOCapacity
         
         [de, pmf] = calculateDiffEntropyOfClippedNormal( ...
             a, b, nbins, mu, sigma)
+        
+        out = removeZeroRowsAndCols(in)
     end % methods(Static)
     
 end
