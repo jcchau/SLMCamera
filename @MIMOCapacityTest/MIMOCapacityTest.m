@@ -40,6 +40,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         combinedTestCalculateMinAndMaxDiffEntropy3DConverges(tc)
         
         testCalculateDiffEntropyOfGaussian(tc)
+        
+        testCalculateCapacityForUniformInputVarianceH(tc)
     end % methods(Test)
     
 end

@@ -25,12 +25,15 @@ classdef MIMOCapacity
         
         nbins = fillMaxNBins(max_nbins, dimensions)
         
-        [nats, min_nats, variance_H, nbins, trials] = ...
+        [nats, min_nats, variance_H, nbins, trials, h_y, pmf] = ...
             calculateCapacityForUniformInput( ...
             G, x_max, variance_noise_out, max_nbins, min_trials)
         
         variance = calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
             pmf, num_trials)
+        
+        [de, pmf] = calculateDiffEntropyOfClippedNormal( ...
+            a, b, nbins, mu, sigma)
     end % methods(Static)
     
 end
