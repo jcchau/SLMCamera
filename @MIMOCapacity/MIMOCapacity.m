@@ -36,6 +36,8 @@ classdef MIMOCapacity
             a, b, nbins, mu, sigma)
         
         out = removeZeroRowsAndCols(in)
+        
+        msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
     end % methods(Static)
     
 end

@@ -42,6 +42,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testCalculateDiffEntropyOfGaussian(tc)
         
         testCalculateCapacityForUniformInputVarianceH(tc)
+        
+        testConvertPointToSubscriptIndex(tc)
     end % methods(Test)
     
 end
