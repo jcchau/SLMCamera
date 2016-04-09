@@ -44,6 +44,9 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testCalculateCapacityForUniformInputVarianceH(tc)
         
         testConvertPointToSubscriptIndex(tc)
+        
+        testConvertLinearToSubscriptIndexInverse(tc)
+        testConvertLinearToSubscriptIndexInd2sub(tc)
     end % methods(Test)
     
 end
