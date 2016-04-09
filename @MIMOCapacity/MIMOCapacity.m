@@ -39,8 +39,6 @@ classdef MIMOCapacity
         
         msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
         
-        pmf = generateTransformedUniformPmf( ...
-            G, x_max, nbins, ymin, ymax)
     end % methods(Static)
     
 end
