@@ -53,5 +53,9 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testComputeUniformPmfForGx3DGEye(tc)
     end % methods(Test)
     
+    methods(Static)
+        timeComputeUniformPmfForGx3D(s_max_nbins, s_threads)
+    end % methods(Static)
+    
 end
 
