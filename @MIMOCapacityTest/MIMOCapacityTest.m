@@ -49,6 +49,7 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testConvertLinearToSubscriptIndexInd2sub(tc)
         
         testComputeUniformPmfForGxGFromP27(tc)
+        testComputeUniformPmfForGxIdenticalRowsOfG(tc)
     end % methods(Test)
     
 end
