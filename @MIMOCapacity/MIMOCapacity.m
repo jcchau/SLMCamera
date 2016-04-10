@@ -42,6 +42,8 @@ classdef MIMOCapacity
         
         pmf = generateTransformedUniformPmf( ...
             G, x_max, nbins, ymin, ymax)
+        
+        pmf = computeUniformPmfForGx(G, x_max, y_min, delta, nbins)
     end % methods(Static)
     
 end
