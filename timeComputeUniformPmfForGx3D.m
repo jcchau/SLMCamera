@@ -1,9 +1,15 @@
-function timeComputeUniformPmfForGx3D(s_max_nbins, s_threads)
+function timeComputeUniformPmfForGx3D(s_max_nbins, s_threads, s_rseed)
 % timeComputeUniformPmfForGx3D times how long it takes to run
 % computeUniformPmfForGx on a nbin 3D PMF for a random G.
 
-max_nbins = sscanf(s_max_nbins, '%u');
+max_nbins = sscanf(s_max_nbins, '%e');
 nthreads = sscanf(s_threads, '%u');
+
+if(nargin >= 3)
+    % seed the random number generator if a seed is provided
+    rseed = sscanf(s_rseed, '%i');
+    rng(rseed);
+end
 
 if(~isempty(gcp('nocreate')))
     delete(gcp)
