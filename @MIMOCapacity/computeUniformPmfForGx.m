@@ -1,4 +1,4 @@
-function pmf = computeUniformPmfForGx(G, x_max, ...
+function [pmf, reachable] = computeUniformPmfForGx(G, x_max, ...
     y_min, delta, nbins)
 % computeUniformPmfForGx computes the PMF for a uniformly distributed
 % random variable y, where y = G*x where x is bounded to the interval [0,
@@ -12,6 +12,10 @@ function pmf = computeUniformPmfForGx(G, x_max, ...
 %   uniformly distributed over the range of values G*x for for x(d) in the
 %   interval [0, x_max(d)] for all dimensions d.  pmf is a is a
 %   multidimension matrix of size nbins.  
+% reachable is a multidimension matrix of the same size as pmf that
+%   indicates whether the bin of the pmf is reachable by G*x for the
+%   bounded values of x.  This output is provided for debugging and testing
+%   purposes.  
 %
 % G (n_r*n_t matrix) is the channel matrix for n_t transmitters and n_r
 %   receivers.  
@@ -105,13 +109,8 @@ ub = x_max';
 lpopt = optimoptions('linprog', 'Algorithm', 'interior-point', ...
     'Display', 'off');
 
-wb = waitbar(0, 'Starting...');
-
 % fill in each bin of pmf in parallel
-for ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
-    
-    waitbar(ibin./prod(nbins), wb, ...
-        sprintf('Bin %u of %u', ibin, prod(nbins)));
+parfor ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
     
     % Get the matrix subscript index so we can determine the bounds of this
     % bin.
@@ -121,7 +120,8 @@ for ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
     y_lb = y_min + (ms-1) .* delta;
     y_ub = y_min + ms .* delta;
     
-    b = [y_ub; -y_lb];
+    % y_ub and y_lb are row vectors; b should be a column vector.
+    b = [y_ub'; -y_lb'];
     
     [~, ~, exitflag] = linprog(f, A, b, [], [], lb, ub, [], lpopt);
     
@@ -139,8 +139,6 @@ for ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
     end % switch exitflag
     
 end % parfor ibin
-
-close(wb)
 
 %% compute the uniform PMF
 % Here, we rely on the approximation that all reachable bins can be reached
