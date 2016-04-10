@@ -133,7 +133,6 @@ parfor ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
             % No feasible point was found.
             reachable(ibin) = false;
         otherwise
-            keyboard
             error('Unexpected exitflag %d from linprog for ibin %d.', ...
                 exitflag, ibin);
     end % switch exitflag
