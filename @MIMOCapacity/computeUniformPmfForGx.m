@@ -100,13 +100,17 @@ lb = zeros(1, n_t);
 ub = x_max';
 
 % optimization options
-% As recommended by the MATLAB documentation at
-% http://www.mathworks.com/help/optim/ug/choosing-a-solver.html, use the
-% 'interior-point' instead of the default 'interioir-point-legacy'
-% algorithm.
+% The MATLAB documentation (for versions >=2015b) at
+% http://www.mathworks.com/help/optim/ug/choosing-a-solver.html, recommend
+% using the 'interior-point' instead of the default
+% 'interior-point-legacy' algorithm.  However, the newer interior-point
+% algorithm sometimes returns with exitflag 0 (indicating that the number
+% of iterations exceeded the maximum) while the legacy (default)
+% interior-point algorithm does not.  So for now, stick to the default
+% algorithm.  
 % TODO: After I understand linear programming algorithms more, I may be
 % able to choose options to reduce the computation time.
-lpopt = optimoptions('linprog', 'Algorithm', 'interior-point', ...
+lpopt = optimoptions('linprog', ...
     'Display', 'off');
 
 % fill in each bin of pmf in parallel
