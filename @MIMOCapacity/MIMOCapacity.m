@@ -43,6 +43,9 @@ classdef MIMOCapacity
         [pmf, reachable] = computeUniformPmfForGx(G, x_max, ...
             y_min, delta, nbins)
         
+        [pmf, delta] = computeReceivedPmfViaUnifThenConv( ...
+            G, x_max, sigma_w, ns, nbins)
+        
     end % methods(Static)
     
 end
