@@ -112,6 +112,8 @@ ub = x_max';
 % able to choose options to reduce the computation time.
 lpopt = optimoptions('linprog', ...
     'Display', 'off');
+lpopt_simplex = optimoptions('linprog', 'Algorithm', 'simplex', ...
+    'Display', 'off');
 
 % fill in each bin of pmf in parallel
 parfor ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
@@ -137,8 +139,18 @@ parfor ibin = 1:prod(nbins) % ibin is the linear index for the PMF bin
             % No feasible point was found.
             reachable(ibin) = false;
         otherwise
-            error('Unexpected exitflag %d from linprog for ibin %d.', ...
-                exitflag, ibin);
+            % Try again with the simplex algorithm
+            [~, ~, exitflag] = linprog(f, A, b, [], [], lb, ub, [], ...
+                lpopt_simplex);
+            switch exitflag
+                case 1
+                    reachable(ibin) = true;
+                case -2
+                    reachable(ibin) = false;
+                otherwise
+                    error(['Unexpected exitflag %d from linprog for ' ...
+                        'ibin %d.'], exitflag, ibin);
+            end % inner switch exitflag
     end % switch exitflag
     
 end % parfor ibin
