@@ -144,6 +144,11 @@ indexing_weights = MIMOCapacity.convertToLinearIndexWeights(nbins);
 li_Gx_max = MIMOCapacity.convertToLinearIndex(indexing_weights, ...
     index_Gx_max);
 
+if(isempty(li_Gx_max))
+    error(['Unable to calculate the linear index for the PMF bin ' ...
+        'that contains Gx_max.']);
+end % if(isempty(li_Gx_max))
+
 %% include x_max into G
 % rand() gives uniformly distributed random values in the interval (0,1).
 % However, we want x to be uniformly distributed in the interval (0, x_max)
@@ -170,27 +175,6 @@ while(hits(li_Gx_max) < tc)
     
     nestedTallyGx
 end % while(hits(li_Gxmax) < tc)
-
-if(isempty(li_Gx_max))
-    warning('MIMOCapacity:generateTransformedUniformPmf:GxmaxOutside', ...
-        ['The YMIN and YMAX specified does not include G*x where x ' ...
-        'is the maximum as specified by X_MAX. ' ...
-        'Skipped running trials until the bin for Gx_max has at ' ...
-        'least tc hits.']);
-    
-    % run one batch so we don't skip the next step
-    nestedTallyGx
-end % if(isempty(li_Gx_max))
-
-%% and until we have at least tc hits in the bin with fewest non-zero hits
-
-while(min(hits(hits>0)) < tc)
-    waitbar(min(hits(hits>0))/tc, wb, ...
-        sprintf('Minimum hit count reached %u of %.0f hits', ...
-        min(hits(hits>0)), tc));
-    
-    nestedTallyGx
-end % while(min(hits(hits>0)) < tc)
 
 close(wb)
 
