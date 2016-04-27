@@ -24,8 +24,9 @@ function [pmf, reachable] = computeUniformPmfForGx(G, x_max, ...
 % y_min (n_r-element row vector) is the lowest y (or G*x) that is included
 %   in a bin in the PMF.
 % delta (n_r-element row vector) is the size (in terms of y) of each bin of
-%   the PMF. nbins (n_r-element row vector) is the number of bins along
-%   each dimension of y (or of the PMF) in the PMF. 
+%   the PMF. 
+% nbins (n_r-element row vector) is the number of bins along each dimension
+%   of y (or of the PMF) in the PMF. 
 
 %% check inputs and get dimensions
 
