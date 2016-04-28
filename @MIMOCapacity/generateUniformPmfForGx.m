@@ -1,4 +1,4 @@
-function pmf = generateUniformPmfForGx(G, x_max, ymin, delta, nbins)
+function pmf = generateUniformPmfForGx(G, x_max, y_min, delta, nbins)
 % generateTransformedUniformPmf generates the uniformly-distributed PMF
 % that covers the possible values of G*x where x in each dimension is in
 % the range [0, x_max].  
@@ -6,24 +6,24 @@ function pmf = generateUniformPmfForGx(G, x_max, ymin, delta, nbins)
 % Uses the channel model: y = G*x + w.
 %
 %   PMF = generateTransformedUniformPmf( ...
-%       G, X_MAX, YMIN, DELTA, NBINS)
+%       G, X_MAX, Y_MIN, DELTA, NBINS)
 %
 % PMF (n_r-dimension matrix) is the generated PMF.
 %
 % G (n_r*n_t matrix) is the channel matrix.  
 % X_MAX (scalar or n_t-element column vector) is the maximum signal that
 %   can be transmitted by each transmitter.
-% YMIN (n_r-element row vector) is the minimum value (respectively) covered
-%   covered by the PMF along each dimension. 
+% Y_MIN (n_r-element row vector) is the minimum value (respectively)
+%   covered covered by the PMF along each dimension. 
 % DELTA (n_r-element row vector) is the size (in terms of y) of each bin of
 %   the PMF.
 % NBINS (n_r-element row vector) is the number of bins along each dimension
 %   of y.  NBINS should consist of whole numbers.  
 %
-% Note that nbins, ymin, and ymax should be specified to be large enough to
-% cover G*x (without the noise from w).  When the PMF of G*x is convolved
-% against the PMF of the noise w, the matrix would be correspondingly
-% expanded (using the same bin sizes).  
+% Note that y_min, delta, and nbins should be specified to be large enough
+% to cover G*x (without the noise from w).  When the PMF of G*x is
+% convolved against the PMF of the noise w, the matrix would be
+% correspondingly expanded (using the same bin sizes).
 
 %% check inputs and get dimensions
 
@@ -45,9 +45,9 @@ if(any(x_max<0))
     error('Parameter X_MAX should be non-negative.');
 end
 
-% ymin
-if(~isequal(size(ymin), [1, n_r]))
-    error('Parameter YMIN must be a n_r element row vector.');
+% y_min
+if(~isequal(size(y_min), [1, n_r]))
+    error('Parameter Y_MIN must be a n_r element row vector.');
 end
 if(any(y_min>0))
     warning('The PMF excludes the y = 0 point.');
@@ -86,7 +86,7 @@ end
 % Transpose Gx_max for convertPointToSubscriptIndex, which expects each
 % point to be represented by a row in input y.  
 index_Gx_max = MIMOCapacity.convertPointToSubscriptIndex(Gx_max', ...
-    ymin, delta, nbins);
+    y_min, delta, nbins);
 
 % subscript index of y=0
 index_zero = MIMOCapacity.convertPointToSubscriptIndex(zeros(1, n_r), ...
@@ -180,8 +180,7 @@ close(wb)
 
 if(nnz(hits) == 0)
     error('MIMOCapacity:generateTransformedUniformPmf:NoHits', ...
-        ['No hits were recorded. The specified YMIN and YMAX do ' ...
-        'not adequately cover the possible values of G*x.']);
+        'No hits were recorded; this should not have happened.');
 end % if(nnz(hits) == 0)
 
 %% return a uniform PMF that reaches the same values
@@ -210,7 +209,7 @@ pmf(hits>0) = unif_prob_per_bin;
         % Convert each of the points in Gx into a corresponding linear
         % index (li_Gx) for matrix hits.
         msi_Gx = MIMOCapacity.convertPointToSubscriptIndex(Gx, ...
-            ymin, delta, nbins);
+            y_min, delta, nbins);
         li_Gx = MIMOCapacity.convertToLinearIndex( ...
             indexing_weights, msi_Gx);
 
