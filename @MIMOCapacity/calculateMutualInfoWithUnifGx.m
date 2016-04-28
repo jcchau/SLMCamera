@@ -45,12 +45,14 @@ end
 if(~ismatrix(G))
     error('Parameter G must be a 2D matrix.')
 end
+[G, nz_rows, nz_cols] = MIMOCapacity.removeZeroRowsAndCols(G);
 [n_r, n_t] = size(G);
 
 % x_max
 if(isscalar(x_max))
     x_max = repmat(x_max, n_t, 1);
 end
+x_max = x_max(nz_cols);
 if(~isequal(size(x_max), [n_t, 1]))
     error('Parameter x_max must be a n_t-element column vector.');
 end
@@ -59,6 +61,7 @@ if(any(x_max < 0))
 end
 
 % sigma_w
+sigma_w = sigma_w(nz_rows);
 if(~isequal(size(sigma_w), [n_r, 1]))
     error('Parameter sigma_w must be a n_r-element column vector.');
 end
