@@ -27,11 +27,11 @@ function [nats, min_nats, variance_H, nbins, trials, h_y, pmf] = ...
 %   H_Y.  (Provided for debugging.)
 %
 % G is the channel matrix (from each transmitter to each receiver element).
-%   G is a n_r by n_r matrix, where n_r is the number of received elements
+%   G is a n_r by n_t matrix, where n_r is the number of received elements
 %   and n_t is the number of transmitter elements.  
 % X_MAX (scalar, positive) is the maximum value for each x (from each
 %   transmitter). 
-% VARIANCE_NOISE_OUT (n_r-element column vecotr) is the variance of the
+% VARIANCE_NOISE_OUT (n_r-element column vector) is the variance of the
 %   independent white Gaussian noise (w) of each receiver.  
 % MAX_NBINS (scalar) is the maximum number of bins that may be used for the
 %   PMF.  The PMF is stored as a matrix of double-precision floats (where
