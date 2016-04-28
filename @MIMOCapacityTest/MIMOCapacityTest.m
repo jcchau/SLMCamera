@@ -51,6 +51,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testComputeUniformPmfForGxGFromP27(tc)
         testComputeUniformPmfForGxIdenticalRowsOfG(tc)
         testComputeUniformPmfForGx3DGEye(tc)
+        
+        testGenerateUniformPmfForGxGFromP27(tc)
     end % methods(Test)
     
 end

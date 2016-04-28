@@ -1,5 +1,4 @@
-function pmf = generateTransformedUniformPmf( ...
-    G, x_max, nbins, ymin, ymax)
+function pmf = generateUniformPmfForGx(G, x_max, y_min, delta, nbins)
 % generateTransformedUniformPmf generates the uniformly-distributed PMF
 % that covers the possible values of G*x where x in each dimension is in
 % the range [0, x_max].  
@@ -7,23 +6,24 @@ function pmf = generateTransformedUniformPmf( ...
 % Uses the channel model: y = G*x + w.
 %
 %   PMF = generateTransformedUniformPmf( ...
-%       G, X_MAX, NBINS, YMIN, YMAX)
+%       G, X_MAX, Y_MIN, DELTA, NBINS)
 %
 % PMF (n_r-dimension matrix) is the generated PMF.
 %
 % G (n_r*n_t matrix) is the channel matrix.  
 % X_MAX (scalar or n_t-element column vector) is the maximum signal that
 %   can be transmitted by each transmitter.
+% Y_MIN (n_r-element row vector) is the minimum value (respectively)
+%   covered covered by the PMF along each dimension. 
+% DELTA (n_r-element row vector) is the size (in terms of y) of each bin of
+%   the PMF.
 % NBINS (n_r-element row vector) is the number of bins along each dimension
 %   of y.  NBINS should consist of whole numbers.  
-% YMIN and YMAX (each a n_r-element row vector) are the minimum and
-%   maximum values (respectively) covered covered by the nbins bins along
-%   each dimension.  
 %
-% Note that nbins, ymin, and ymax should be specified to be large enough to
-% cover G*x (without the noise from w).  When the PMF of G*x is convolved
-% against the PMF of the noise w, the matrix would be correspondingly
-% expanded (using the same bin sizes).  
+% Note that y_min, delta, and nbins should be specified to be large enough
+% to cover G*x (without the noise from w).  When the PMF of G*x is
+% convolved against the PMF of the noise w, the matrix would be
+% correspondingly expanded (using the same bin sizes).
 
 %% check inputs and get dimensions
 
@@ -45,6 +45,25 @@ if(any(x_max<0))
     error('Parameter X_MAX should be non-negative.');
 end
 
+% y_min
+if(~isequal(size(y_min), [1, n_r]))
+    error('Parameter Y_MIN must be a n_r element row vector.');
+end
+if(any(y_min>0))
+    warning('The PMF excludes the y = 0 point.');
+end
+
+% delta
+if(~isequal(size(delta), [1, n_r]))
+    error('Parameter delta must be a n_r-element row vector.');
+end
+if(any(delta <= 0))
+    % delta should not be equal zero; otherwise, we'd have duplicate bins
+    % covering the same values (assuming that we have more than one bin in
+    % that dimension).
+    error('Parameter delta must be positive.');
+end
+
 % nbins
 if(~isequal(size(nbins), [1, n_r]))
     error('Parameter NBINS must be a n_r element row vector.');
@@ -53,15 +72,45 @@ if(any(nbins<1))
     error('PARAMETER NBINS should be a whole number.');
 end
 
-% ymin and ymax
-if(~isequal(size(ymin), [1, n_r]))
-    error('Parameter YMIN must be a n_r element row vector.');
+% check that G*x_max is included in the PMF
+Gx_max = G*x_max; % column vector
+y_max = y_min + nbins .* delta; % row vector
+if(any(Gx_max' > y_max))
+    warning('The PMF excludes the y = G*x_max point.');
 end
-if(~isequal(size(ymax), [1, n_r]))
-    error('Parameter YMAX must be a n_r element row vector.');
-end
-if(any(ymin >= ymax))
-    error('Parameter YMAX should be greater than YMIN.');
+
+%% Check that G*x_max is at least close to the maximum-value corner of its
+% bin.  Otherwise, it may be very improbable to hit the bin that contains
+% G*x_max.
+
+% Transpose Gx_max for convertPointToSubscriptIndex, which expects each
+% point to be represented by a row in input y.  
+index_Gx_max = MIMOCapacity.convertPointToSubscriptIndex(Gx_max', ...
+    y_min, delta, nbins);
+
+% subscript index of y=0
+index_zero = MIMOCapacity.convertPointToSubscriptIndex(zeros(1, n_r), ...
+    y_min, delta, nbins);
+
+% lower bound of the bin that contains Gx_max
+lb_bin_Gx_max = y_min + (index_Gx_max-1) .* delta;
+
+% Position of Gx_max within its bin along each dimension, normalized so
+% that 0 means Gx_max is at the lower bound of the bin and 1 means that
+% Gx_max is at the upper bound of the bin.  
+normalized_pos_of_Gx_max_within_bin = (Gx_max' - lb_bin_Gx_max) ./ delta;
+
+% If in any dimension of y, the bin index_Gx_max does not contain the
+% entire range of possible G*x, then ensure that Gx_max is near the upper
+% bound of the bin.  Otherwise, if the distribution of G*x barely touches
+% bin index_Gx_max, it may take a very long time for the Monte Carlo
+% simulation to acquire enough hits in bin index_Gx_max.  
+if(any(index_Gx_max > index_zero & ...
+        normalized_pos_of_Gx_max_within_bin < 0.9))
+    warning(['Gx_max does not extend far enough into its bin; ' ...
+        'the probability of hitting this bin may be low, which may ' ...
+        'cause this Monte Carlo simulation to take a very long time ' ...
+        'to complete.']);
 end
 
 %% initial setup
@@ -89,19 +138,16 @@ hits = zeros([nbins, 1]);
 % index (needed to index elements in arbitrary-dimension matrices).
 indexing_weights = MIMOCapacity.convertToLinearIndexWeights(nbins);
 
-% The size of a bin along each dimension
-delta = (ymax - ymin) ./ nbins;
-
 % Pre-compute the matrix index for the bin corresponding to G*x for the
 % maximum value of x.  This way, it's more efficient to check whether we
 % have the requisite tc hits in this bin.  
-Gx_max = G * x_max;
-% Transpose Gx_max for convertPointToSubscriptIndex, which expects each
-% point to be represented by a row in input y.  
-index_Gx_max = MIMOCapacity.convertPointToSubscriptIndex(Gx_max', ...
-    ymin, delta, nbins);
 li_Gx_max = MIMOCapacity.convertToLinearIndex(indexing_weights, ...
     index_Gx_max);
+
+if(isempty(li_Gx_max))
+    error(['Unable to calculate the linear index for the PMF bin ' ...
+        'that contains Gx_max.']);
+end % if(isempty(li_Gx_max))
 
 %% include x_max into G
 % rand() gives uniformly distributed random values in the interval (0,1).
@@ -130,33 +176,11 @@ while(hits(li_Gx_max) < tc)
     nestedTallyGx
 end % while(hits(li_Gxmax) < tc)
 
-if(isempty(li_Gx_max))
-    warning('MIMOCapacity:generateTransformedUniformPmf:GxmaxOutside', ...
-        ['The YMIN and YMAX specified does not include G*x where x ' ...
-        'is the maximum as specified by X_MAX. ' ...
-        'Skipped running trials until the bin for Gx_max has at ' ...
-        'least tc hits.']);
-    
-    % run one batch so we don't skip the next step
-    nestedTallyGx
-end % if(isempty(li_Gx_max))
-
-%% and until we have at least tc hits in the bin with fewest non-zero hits
-
-while(min(hits(hits>0)) < tc)
-    waitbar(min(hits(hits>0))/tc, wb, ...
-        sprintf('Minimum hit count reached %u of %.0f hits', ...
-        min(hits(hits>0)), tc));
-    
-    nestedTallyGx
-end % while(min(hits(hits>0)) < tc)
-
 close(wb)
 
 if(nnz(hits) == 0)
     error('MIMOCapacity:generateTransformedUniformPmf:NoHits', ...
-        ['No hits were recorded. The specified YMIN and YMAX do ' ...
-        'not adequately cover the possible values of G*x.']);
+        'No hits were recorded; this should not have happened.');
 end % if(nnz(hits) == 0)
 
 %% return a uniform PMF that reaches the same values
@@ -185,7 +209,7 @@ pmf(hits>0) = unif_prob_per_bin;
         % Convert each of the points in Gx into a corresponding linear
         % index (li_Gx) for matrix hits.
         msi_Gx = MIMOCapacity.convertPointToSubscriptIndex(Gx, ...
-            ymin, delta, nbins);
+            y_min, delta, nbins);
         li_Gx = MIMOCapacity.convertToLinearIndex( ...
             indexing_weights, msi_Gx);
 

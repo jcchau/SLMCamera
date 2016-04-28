@@ -21,14 +21,12 @@ function msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
 %   indices for rows of Y that are not covered by the matrix are discarded.
 %
 % Note that since index_y = ceil((y-y_min)/delta), if any dimension of y is
-% exactly zero, y would not land in any bin (the corresponding matrix
+% exactly y_min, y would not land in any bin (the corresponding matrix
 % subscript index would be exactly zero).  
 %
-% However, this won't cause any significant error as long as the PDF of y
-% does not contain any impulse (Dirac delta) for a dimension of y being
-% zero because the probability that y would be exactly zero would be zero.
-% Furthermore, the MATLAB rand() function selects uniformly from the
-% interval (0,1), so it would never output exactly zero.  
+% In this case, for convenience, if y(d)==y_min(d) for a point y for
+% dimension d, then the matrix subscript index for that dimension is set to
+% 1.  
 
 % An alternate implementation could be:
 % index_y = floor((y-y_min)/delta) + 1,
@@ -66,6 +64,12 @@ end
 msi = ceil(bsxfun(@rdivide, ...
     bsxfun(@minus, y, ymin), ...
     delta));
+
+% Handle cases when y==y_min for any dimension.
+% When indexing PMFs, this should not have any significant effect for
+% continuous CDFs since the probability of y==y_min should be zero.  
+% However, being able to set y==y_min is convenient.  
+msi(bsxfun(@eq, y, ymin)) = 1;
 
 % Discard any row of index_y for which any value is outside of the
 % range of valid indices for matrix hits: [1, nbins(d)] for each dimension
