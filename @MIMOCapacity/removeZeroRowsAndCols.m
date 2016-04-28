@@ -1,4 +1,4 @@
-function out = removeZeroRowsAndCols(in)
+function [out, nz_rows, nz_cols] = removeZeroRowsAndCols(in)
 % removeZeroRowsAndCols removes any rows or columns that contain all zeros
 % from the provided matrix.  
 %
@@ -12,10 +12,14 @@ function out = removeZeroRowsAndCols(in)
 % entropy of the recieved signal from the PMF without altering the computed
 % differential entropy.  
 %
-%   OUT = removeZeroRowsAndCols(IN)
+%   [OUT, NZ_ROWS, NZ_COLS] = removeZeroRowsAndCols(IN)
 %
 % OUT is a 2D matrix that is IN with all rows and columns that contain only
 %   zeros removed.  
+% NZ_ROWS is a logical column vector indicating which rows have non-zero
+%   values.  
+% NZ_COLS is a logical row vector indicating which columns have non-zero
+%   values.
 %
 % IN is a 2D matrix.  
 
@@ -23,45 +27,15 @@ if(~ismatrix(in))
     error('This method expects parameter IN to be a 2D matrix.');
 end
 
-%% remove any rows of zeros
+% identify rows and columns with any non-zero elements
+nz_rows = any(in~=0, 2);
+nz_cols = any(in~=0, 1);
 
-% pre-allocate space for the matrix without zero rows
-in_without_zero_rows = zeros(size(in));
+% output a matrix containing only those rows and columns from the input.
+out = in(nz_rows, nz_cols);
 
-% counter for number of non-zero rows
-nrows = 0;
-
-for r = 1:size(in, 1)
-    if(any(in(r, :) ~= 0))
-        nrows = nrows + 1;
-        in_without_zero_rows(nrows, :) = in(r, :);
-    end
-end
-
-% trim any extra pre-allocated rows
-in_without_zero_rows = in_without_zero_rows(1:nrows, :);
-
-%% remove any columns of zeros
-
-% pre-allocate space for the matrix without zero columns
-out = zeros(size(in_without_zero_rows));
-
-% counter for number of non-zero columns
-ncols = 0;
-
-for c = 1:size(in_without_zero_rows, 2)
-    if(any(in_without_zero_rows(:, c) ~= 0))
-        ncols = ncols + 1;
-        out(:, ncols) = in_without_zero_rows(:, c);
-    end
-end
-
-% trim any extra pre-allocated columns
-out = out(:, 1:ncols);
-
-%% in case there are no rows or no columns left
-
-if(nrows == 0 || ncols == 0)
+% in case there are no rows or no columns left
+if(isempty(out))
     out = 0;
 end
 

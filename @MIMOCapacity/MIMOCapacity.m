@@ -24,7 +24,7 @@ classdef MIMOCapacity
         [de, pmf] = calculateDiffEntropyOfClippedNormal( ...
             a, b, nbins, mu, sigma)
         
-        out = removeZeroRowsAndCols(in)
+        [out, nz_rows, nz_cols] = removeZeroRowsAndCols(in)
         
         msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
         
