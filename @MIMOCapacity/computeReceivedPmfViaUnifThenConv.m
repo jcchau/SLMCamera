@@ -1,19 +1,23 @@
 function [pmf, delta] = computeReceivedPmfViaUnifThenConv( ...
     G, x_max, sigma_w, ns, nbins)
-% computeReceivedPmfViaUnifThenConv computes the maximum-entropy PMF (of
-% y = G*x + w, with bounded values of x and independent AWGN w) by first
-% computing the uniformly-distributed PMF of G*x, and then convolving this
-% PMF against the noise PMF.  
+% computeReceivedPmfViaUnifThenConv computes the PMF (of y = G*x + w, with
+% bounded values of x and independent AWGN w, for uniformly-distributed
+% G*x) by first computing the uniformly-distributed PMF of G*x, and then
+% convolving this PMF against the noise PMF.
+%
+% Channel model: y = G*x + w.
 %
 %   pmf = computeReceivedPmfViaUnifThenConv(G, x_max, sigma_w, nbins)
 %
-% pmf (n_r-dimension matrix of size nbins) is the maximum-entropy PMF of y.
+% pmf (n_r-dimension matrix of size nbins) is the PMF of y given a
+%   uniformly-distributed G*x. 
 % delta (n_r-element column vector) is the size of each bin in the PMF.
 %
 % G (n_r by n_t matrix) is the channel matrix. 
-% x_max (n_t-element column vector) is the maximum values of x.  For each
-%   of the n_t transmitters, 0 <= x <= x_max.  If x_max is provided as a
-%   scalar, it will be replicated into a n_t-element column vector. 
+% x_max (n_t-element column vector) is a vector of the maximum values of x.
+%   For each of the n_t transmitters, 0 <= x <= x_max.  If x_max is
+%   provided as a scalar, it will be replicated into a n_t-element column
+%   vector.
 % sigma_w (n_r-element column vector) is the standard deviation of w.  
 % ns (scalar) determines the domain of the PMF generated.  Along each
 %   dimension d of y, where Gx_max = G*x_max, the PMF is computed for
