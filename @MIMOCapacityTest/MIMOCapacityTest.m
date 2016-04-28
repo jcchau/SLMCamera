@@ -47,6 +47,9 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
 
         testComputeReceivedPmfViaUnifThenConv2D(tc)
         testComputeReceivedPmfViaUnifThenConv2DExpandedSigmaW(tc)
+        
+        testRemoveZeroRowsAndCols(tc)
+        testRemoveZeroRowsAndColsAllZeros(tc)
     end % methods(Test)
     
 end
