@@ -122,6 +122,15 @@ pmf(subpmf_indices{:}) = MIMOCapacity.computeUniformPmfForGx(G, x_max, ...
 % the PMF of w needs to be w_nbins long.  
 w_nbins = nbins + i_unif_max - i_unif_min;
 
+% Ensure that the length of the PMF of w is odd so that conv (or convn) can
+% clip off the same number of samples on each end (so that the result of
+% the convolution remains centered and so that the ends of the convolved
+% PMF are clipped symmetrically).
+% Knowing whether w_nbins is even or odd also makes testing easier (by
+% removing some variability).
+even_w_nbins = mod(w_nbins, 2) == 0;
+w_nbins(even_w_nbins) = w_nbins(even_w_nbins) + 1;
+
 % Now for each dimension of w:
 % - Generate the PMF of w along that dimension, symmetric about w(d) = 0
 % with w_nbins, using the same bin size specified in delta.
