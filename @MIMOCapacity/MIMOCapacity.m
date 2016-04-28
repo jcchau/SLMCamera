@@ -36,6 +36,9 @@ classdef MIMOCapacity
         [pmf, delta] = computeReceivedPmfViaUnifThenConv( ...
             G, x_max, sigma_w, ns, nbins)
         
+        [mi_nats, nbins, h_y, pmf] = calculateMutualInfoWithUnifGx( ...
+            G, x_max, sigma_w, max_nbins, ns)
+        
     end % methods(Static)
     
 end
