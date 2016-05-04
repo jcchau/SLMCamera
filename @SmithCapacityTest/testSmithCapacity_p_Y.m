@@ -16,6 +16,11 @@ voi = voi ./ sum(voi);
 numsamples = randi(10);
 y = 2.*(rand(numsamples, 1)-0.5) .* A;
 
+% randomly make row of column vector
+if(rand() > 0.5)
+    y = y';
+end
+
 %% run method under test
 
 pdf_test = SmithCapacity.p_Y(y, poi, voi);

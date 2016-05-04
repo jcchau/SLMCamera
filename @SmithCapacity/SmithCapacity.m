@@ -85,7 +85,7 @@ classdef SmithCapacity
             pdf = M * voi;
             
             % Restore the result to the shape of y
-            reshape(pdf, orig_shape_y);
+            pdf = reshape(pdf, orig_shape_y);
         end % function p_Y
         
     end % Methods(Static)
