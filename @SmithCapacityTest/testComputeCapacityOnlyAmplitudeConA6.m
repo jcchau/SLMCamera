@@ -18,7 +18,7 @@ tc.verifyEqual(sum(voi), 1, 'AbsTol', 1e-12, ...
     'Total probability constraint violated.');
 
 % check symmetry
-tc.verifyEqual(poi(3:-1:1), -poi(4:6), 'AbsTol', 1e-6, 'poi symmetry.');
+tc.verifyEqual(poi(3:-1:1), -poi(4:6), 'AbsTol', 1e-5, 'poi symmetry.');
 tc.verifyEqual(voi(3:-1:1), voi(4:6), 'AbsTol', 1e-6, 'voi symmetry.');
 
 % check voi ascending

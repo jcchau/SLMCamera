@@ -100,17 +100,21 @@ end % while (the n=2 loop)
 % So, also set TolFun to 1e-12 so that TolX is what primarily determines
 % when the optimization ends.
 % 
-% Decrease TolX from 1e-10 to 1e-12. 
+% Decrease TolX from 1e-10 to 1e-15. 
 % Decrease TolCon from 1e-6 to 1e-12
 % Decrease TolFun from 1e-6 to 1e-12.
 %
 % Note though, that even with TolX = 1e-12 being the terminating condition
 % for the optimization, the optimal poi found was still found to be 1.3e-7
 % off from the true optimal poi.  (Determined by checking poi(1) and
-% poi(end) against -A and A.)  This does not seem to be improved by further
-% decreasing TolX.  
+% poi(end) against -A and A.)  And the middle points of increase are also
+% off (determined by checking symmetry); decreasing TolX to 1e-15 seems to
+% improve this precision slightly.  Decreasing TolX further to 1e-16 seems
+% to worsen precision (probably because fmincon can't recognize when it
+% reaches the optimal and due to precision errors in MATLAB's
+% floating-point math).
 ooptions = optimoptions('fmincon', ...
-    'TolX', 1e-12, ...
+    'TolX', 1e-15, ...
     'TolFun', 1e-12, ...
     'TolCon', 1e-12, ...
     'MaxFunEvals', 6000); % Need to increase MaxFunEvals
@@ -173,7 +177,7 @@ while(true)
         n = n+1;
         
         % Update ooptions.TypicalX to set feature scaling in fmincon.
-        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n, n, 1)];
+        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n/2, n, 1)];
     end % if-else (SmithCapacity.checkCorollary1)
 end % while (the n>2 loop)
 
