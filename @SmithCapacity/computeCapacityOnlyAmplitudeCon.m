@@ -15,7 +15,7 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
 %
 % Alim is the amplitude limit of X, so X is constrained to [-A, A].
 % delta is the small value by which the algorithm increments A until A
-%   reaches Alim.  
+%   reaches Alim.  (Default: 0.5).
 %
 %% Channel normalization:
 % From Smith1969 p. 11--12.
@@ -33,8 +33,11 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
 % and
 % I(X;Y) = I(X';Y')
 
+% Set the default delta to 0.5.  
+% Testing for Alim=6 indicates that n needs to increment once every
+% increase of 1.1 in A.  
 if(nargin < 2)
-    delta = 0.1;
+    delta = 0.5;
 end
 
 % Start with A<=1.6, because then, from Smith1969 (p.51), we know that the
