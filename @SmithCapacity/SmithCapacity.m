@@ -31,15 +31,13 @@ classdef SmithCapacity
         end % function I
         
         function r = i(x, poi, voi)
-            r = zeros(size(x));
-            for ii = 1:numel(x)
-                % marginal information density
-                r(ii) = integral( ...
-                    @(y) SmithCapacity.aloga_over_b( ...
-                    SmithCapacity.p_N(y-x(ii)), ...
-                    SmithCapacity.p_Y(y, poi, voi)), ...
-                    -Inf, Inf);
-            end % for ii
+            % marginal information density
+            f = @(x) integral( ...
+                @(y) SmithCapacity.aloga_over_b( ...
+                SmithCapacity.p_N(y-x), ...
+                SmithCapacity.p_Y(y, poi, voi)), ...
+                -Inf, Inf);
+            r = arrayfun(f, x);
         end % function i
         
         function r = I_Z(Z)
@@ -79,7 +77,8 @@ classdef SmithCapacity
         
     end % Methods(Static)
     
-    methods(Access = protected, Static)
+    % Internal methods (but publicly accessible to facilitate testing).
+    methods(Static)
         function a = xlogx(x)
             a = x .* log(x);
             a(x==0) = 0;
