@@ -53,15 +53,19 @@ classdef SmithCapacityTest < matlab.unittest.TestCase
             voi = [0.5, 0.5];
             I_Fo = SmithCapacity.I([-A, A], [0.5, 0.5]);
             
-            x = linspace(poi(1), poi(end), 100);
-            figure();
-            plot(x, SmithCapacity.i(x, poi, voi))
-            hold on
-            plot([x(1), x(end)], repmat(I_Fo, 1, 2), 'r')
+            %x = linspace(poi(1), poi(end), 100);
+            %figure();
+            %plot(x, SmithCapacity.i(x, poi, voi))
+            %hold on
+            %plot([x(1), x(end)], repmat(I_Fo, 1, 2), 'r')
             
             r = SmithCapacity.checkCorollary1(A, poi, voi, I_Fo);
             tc.verifyFalse(r, 'n=2 should not be optimal for A=1.7.');
         end % function testCheckCorollary1ForA1_7
+        
+        testComputeCapacityOnlyAmplitudeConALE1_6(tc)
+        testComputeCapacityOnlyAmplitudeConA1_7(tc)
+        testComputeCapacityOnlyAmplitudeConA6(tc)
     end % methods(Test)
     
 end
