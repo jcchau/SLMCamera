@@ -33,18 +33,23 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
 % and
 % I(X;Y) = I(X';Y')
 
+if(nargin < 2)
+    delta = 0.1;
+end
+
 % Start with A<=1.6, because then, from Smith1969 (p.51), we know that the
 % optimium probability distribution function (or CDF) is F_o(x) = 0.5 *
 % U(X+A) + 0.5 * U(X-A) where U is the unit step function.  
 A = min(Alim, 1.6);
 n = 2;
 
+%% For n==2.
+
 % Define the distribution F with poi (calculated in the while loop) and
 % voi.
 % Value of increase (in F_o) at each point of increase (for the two points)
 voi = [0.5, 0.5]';
 
-% For n==2.
 % The optimal distribution F_o for n=2 is much easier to compute; the code
 % in this while loop is optimized for the n=2 case.  
 while(true)
@@ -74,9 +79,40 @@ while(true)
     end
 end % while (the n=2 loop)
 
-% For n>2
+%% Modify the optimization options.  
+% The termination of the optimization is determined by TolX (the
+% termination tolerance on x) and TolFun (the termination tolerance on the
+% function).  
+%
+% 1) From my past experience, I think we can get Z in I(Z) to a precision
+% of 1e-12 (without running into precision problems with MATLAB's
+% double-precision floating point math).  So set TolX to 1e-12.
+% 2) For this much precision in Z to be meaningful, also set TolCon to
+% 1e-12 (otherwise, getting the optimal Z to within 1e-12 wouldn't mean
+% much if the total probability in voi exceeds 1 by more than 1e-12).
+% 3) checkCorollary1 expects I(F_o) and i(x;F) to be calculated to each be
+% calculated to (at worst) \pm 0.5e-6 precision.  However, I don't really
+% want to compromise the precision of 1) and 2) by terminating the
+% optimization when get this precision on I_Fo for a particular A and n.
+% So, also set TolFun to 1e-12 so that TolX is what primarily determines
+% when the optimization ends.
+% 
+% Decrease TolX from 1e-10 to 1e-12. 
+% Decrease TolCon from 1e-6 to 1e-12
+% Decrease TolFun from 1e-6 to 1e-12.
+%
+% Note though, that even with TolX = 1e-12 being the terminating condition
+% for the optimization, the optimal poi found was still found to be 1.3e-7
+% off from the true optimal poi.  (Determined by checking poi(1) and
+% poi(end) against -A and A.)  This does not seem to be improved by further
+% decreasing TolX.  
+ooptions = optimoptions('fmincon', ...
+    'TolX', 1e-12, ...
+    'TolFun', 1e-12, ...
+    'TolCon', 1e-12);
+
+%% For n>2
 while(true)
-    
     %% Compute the optimal Fo given n and A.  
     % Maximize I(Z) by minimizing -I(Z) using fmincon.
     
@@ -94,21 +130,23 @@ while(true)
     Z_init = [repmat(1/n, n, 1); (linspace(-A, A, n))'];
     
     % The optimal Z that minimizes -I(Z).
-    [Zo, negI_Fo, exitflag] = ...
-        fmincon(@(z) -SmithCapacity.I_Z(z), Z_init, cA, b, Aeq, beq);
+    [Zo, ~, exitflag] = ...
+        fmincon(@(z) -SmithCapacity.I_Z(z), Z_init, cA, b, Aeq, beq, ...
+        [], [], [], ooptions);
     if(exitflag<1)
         error('Optimization to find F_o failed.');
     end
-    I_Fo = -negI_Fo;
     voi = Zo(1:n);
     poi = Zo(n+1:end);
     
+    % Fix precision error for the farthest points of increase in the
+    % optimization result.
+    poi(1) = -A;
+    poi(end) = A;
+    I_Fo = SmithCapacity.I(poi, voi);
+    
     %% Check for optimality (Smith1971 Corollary 1)
-    % Note that by default, for the fmincon function used above:
-    % Step Tolerance: 1e-10;
-    % Function Tolerance: 1e-6;
-    % Optimality Tolerance: 1e-6.  
-    % SmithCapacity.checkCorollary1 should allow for these tolerances.
+    % Note that SmithCapacity.checkCorollary1 should allow for tolerances.
     if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
         if(A == Alim)
             C = I_Fo;
@@ -117,8 +155,21 @@ while(true)
             A = min(A+delta, Alim);
         end
     else
+        % The current value of n is not optimal for the current value of A.
+        
+        % Catch runaway n (due to programming or precision error).
+        if(n > 2*(A+2))
+            error('n=%d is far too large for A=%.1f.', n, A);
+        elseif(n > A+2)
+            warning('n=%d seems to be too large for A=%.1f.', n, A);
+        end
+        
+        % increment n
         n = n+1;
-    end
+        
+        % Update ooptions.TypicalX to set feature scaling in fmincon.
+        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n, n, 1)];
+    end % if-else (SmithCapacity.checkCorollary1)
 end % while (the n>2 loop)
 
 end
