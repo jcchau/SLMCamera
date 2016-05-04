@@ -112,7 +112,8 @@ end % while (the n=2 loop)
 ooptions = optimoptions('fmincon', ...
     'TolX', 1e-12, ...
     'TolFun', 1e-12, ...
-    'TolCon', 1e-12);
+    'TolCon', 1e-12, ...
+    'MaxFunEvals', 6000); % Need to increase MaxFunEvals
 
 %% For n>2
 while(true)
@@ -137,7 +138,8 @@ while(true)
         fmincon(@(z) -SmithCapacity.I_Z(z), Z_init, cA, b, Aeq, beq, ...
         [], [], [], ooptions);
     if(exitflag<1)
-        error('Optimization to find F_o failed.');
+        error('Optimization to find F_o failed. A=%.1f, n=%d.', ...
+            A, n);
     end
     voi = Zo(1:n);
     poi = Zo(n+1:end);
