@@ -64,15 +64,28 @@ classdef SmithCapacity
         function pdf = p_Y(y, poi, voi)
             % The pdf of Y = X + N, where X has points of increase at poi,
             % each with a voi increase in CDF.  
+            % Parameter y may be a vector (either row or col).  
+            % Output pdf is the same shape as y.
             
-            % Parameter y may be a vector (of unknown shape).  Rather than
-            % try to neatly vectorize everything across each poi too, just
-            % implement this in a for loop.
+            % Store the original shape of y and unroll it into a column
+            % vector.  
+            orig_shape_y = size(y);
+            y = y(:);
             
-            pdf = zeros(size(y));
-            for ii = 1:length(poi)
-                pdf = pdf + voi(ii)*normpdf(y, poi(ii), 1);
-            end % for ii
+            % make poi a row vector
+            if(iscolumn(poi))
+                poi = poi';
+            end
+            % and voi a column vector
+            if(isrow(voi))
+                voi = voi';
+            end
+            
+            M = bsxfun(@(y,p) normpdf(y, p, 1), y, poi);
+            pdf = M * voi;
+            
+            % Restore the result to the shape of y
+            reshape(pdf, orig_shape_y);
         end % function p_Y
         
     end % Methods(Static)
