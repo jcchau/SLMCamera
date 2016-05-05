@@ -121,12 +121,12 @@ ooptions = optimoptions('fmincon', ...
     'MaxIter', 1e4, ...
     'UseParallel', true); 
 
-wb = waitbar(A/Alim, sprintf('%.1f/%.0f', A, Alim));
-
 %% For n>2
 while(true)
     %% Compute the optimal Fo given n and A.  
     % Maximize I(Z) by minimizing -I(Z) using fmincon.
+    
+    fprintf('A=%f n=%d ', A, n);
     
     % Constraints on Z (lab book #4, p.85-86.)
     Aeq = [ones(1,n), zeros(1,n)];
@@ -141,7 +141,7 @@ while(true)
     % equally-likely points of increase, spread out from -A to A.
     Z_init = [repmat(1/n, n, 1); (linspace(-A, A, n))'];
     
-    waitbar(A/Alim, wb, sprintf('%.1f/%.0f fmincon...', A, Alim));
+    fprintf('fmincon... ');
     
     % The optimal Z that minimizes -I(Z).
     [Zo, ~, exitflag] = ...
@@ -169,14 +169,13 @@ while(true)
     
     I_Fo = SmithCapacity.I(poi, voi);
     
-    waitbar(A/Alim, wb, sprintf('%.1f/%.0f checking...', A, Alim));
+    fprintf('checking...\n');
     
     %% Check for optimality (Smith1971 Corollary 1)
     % Note that SmithCapacity.checkCorollary1 should allow for tolerances.
     if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
         if(A == Alim)
             C = I_Fo;
-            close(wb)
             return;
         else
             A = min(A+delta, Alim);
