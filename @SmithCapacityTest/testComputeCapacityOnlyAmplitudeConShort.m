@@ -17,9 +17,9 @@ t2 = toc;
 
 %% Verify
 
-tc.verifyEqual(C2, C1, 'C');
-tc.verifyEqual(poi2, poi1, 'poi');
-tc.verifyEqual(voi2, voi1, 'voi');
+tc.verifyEqual(C2, C1, 'AbsTol', 1e-10, 'C');
+tc.verifyEqual(poi2, poi1, 'AbsTol', 1e-5, 'poi');
+tc.verifyEqual(voi2, voi1, 'AbsTol', 1e-5, 'voi');
 
 % Allow for a 0.5 second tolerance.
 tc.verifyLessThanOrEqual(t2, t1, 'time');
