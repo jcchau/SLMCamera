@@ -3,8 +3,18 @@ function testComputeCapacityOnlyAmplitudeConFastA100(tc)
 % computeCapacityOnlyAmplitudeConFast for A = 100.  
 % Want to ensure that this method under test will at least work for a
 % signal-to-noise ratio of up to 100.  
+%
+% To avoid taking excessively long on weaker computers, only go up to A=12
+% unless we have at least 12 parpool workers.  
 
-A = 100;
+pp = gcp('nocreate');
+if(isempty(pp) || pp.NumWorkers < 12)
+    % Getting to A=100 takes a very long time.  Only try if we're running
+    % with a lot of parpool workers.  
+    A = 12;
+else
+    A = 100;
+end
 
 [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast(A);
 
