@@ -8,19 +8,30 @@ A = 100;
 
 [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeCon(A);
 
-tc.verifyLength(poi, 6, 'length(poi)');
-tc.verifyLength(voi, 6, 'length(voi)');
+n = length(poi);
+tc.verifyLength(voi, n, 'length(voi)');
 
 tc.verifyEqual(sum(voi), 1, 'AbsTol', 1e-12, ...
     'Total probability constraint violated.');
 
 % check symmetry
-tc.verifyEqual(poi(3:-1:1), -poi(4:6), 'AbsTol', 1e-5, 'poi symmetry.');
-tc.verifyEqual(voi(3:-1:1), voi(4:6), 'AbsTol', 1e-6, 'voi symmetry.');
+if(mod(n,2) == 0)
+    negside_i = n/2:-1:1;
+    posside_i = n/2+1:2*n;
+else
+    negside_i = floor(n/2):-1:1;
+    center_i = floor(n/2) + 1;
+    posside_i = floor(n/2)+2:2*n;
+    tc.verifyEqual(poi(center_i), 0, 'AbsTol', 1e-5, 'poi symmetry.');
+end
+tc.verifyEqual(poi(negside_i), -poi(posside_i), ...
+    'AbsTol', 1e-5, 'poi symmetry.');
+tc.verifyEqual(voi(negside_i), voi(posside_i), ...
+    'AbsTol', 1e-6, 'voi symmetry.');
 
 % check voi ascending
-for ii=0:1
-    tc.verifyGreaterThan(voi(5+ii), voi(4+ii), ...
+for ii = length(posside_i)-1;
+    tc.verifyGreaterThan(voi(posside_i(ii+1)), voi(posside_i(ii)), ...
         'voi should increase with poi''s distance from 0.');
 end
 
