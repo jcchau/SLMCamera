@@ -117,7 +117,11 @@ ooptions = optimoptions('fmincon', ...
     'TolX', 1e-15, ...
     'TolFun', 1e-12, ...
     'TolCon', 1e-12, ...
-    'MaxFunEvals', 6000); % Need to increase MaxFunEvals
+    'MaxFunEvals', 1e5, ... % Need to increase MaxFunEvals
+    'MaxIter', 1e4, ...
+    'UseParallel', true); 
+
+wb = waitbar(A/Alim, sprintf('%.1f/%.0f', A, Alim));
 
 %% For n>2
 while(true)
@@ -137,6 +141,8 @@ while(true)
     % equally-likely points of increase, spread out from -A to A.
     Z_init = [repmat(1/n, n, 1); (linspace(-A, A, n))'];
     
+    waitbar(A/Alim, wb, sprintf('%.1f/%.0f fmincon...', A, Alim));
+    
     % The optimal Z that minimizes -I(Z).
     [Zo, ~, exitflag] = ...
         fmincon(@(z) -SmithCapacity.I_Z(z), Z_init, cA, b, Aeq, beq, ...
@@ -154,11 +160,14 @@ while(true)
     poi(end) = A;
     I_Fo = SmithCapacity.I(poi, voi);
     
+    waitbar(A/Alim, wb, sprintf('%.1f/%.0f checking...', A, Alim));
+    
     %% Check for optimality (Smith1971 Corollary 1)
     % Note that SmithCapacity.checkCorollary1 should allow for tolerances.
     if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
         if(A == Alim)
             C = I_Fo;
+            close(wb)
             return;
         else
             A = min(A+delta, Alim);
@@ -167,9 +176,9 @@ while(true)
         % The current value of n is not optimal for the current value of A.
         
         % Catch runaway n (due to programming or precision error).
-        if(n > 2*(A+2))
+        if(n > 2*A)
             error('n=%d is far too large for A=%.1f.', n, A);
-        elseif(n > A+2)
+        elseif(n > 1.4*A+1)
             warning('n=%d seems to be too large for A=%.1f.', n, A);
         end
         
@@ -179,6 +188,7 @@ while(true)
         % Update ooptions.TypicalX to set feature scaling in fmincon.
         ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n/2, n, 1)];
     end % if-else (SmithCapacity.checkCorollary1)
+    
 end % while (the n>2 loop)
 
 end
