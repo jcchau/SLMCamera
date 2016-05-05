@@ -34,7 +34,7 @@ end % for ii
 
 %% verify result
 
-tc.verifyEqual(r_test, expected, ...
+tc.verifyEqual(r_test, expected, 'AbsTol', 1e-6, ...
     'test results do not match expected results.');
 
 end

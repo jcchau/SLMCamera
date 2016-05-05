@@ -22,6 +22,10 @@ else
     [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast(A);
 end
 
+% Sort points of increase in ascending order
+[poi, sortindex] = sort(poi);
+voi = voi(sortindex); % does not change shape
+
 n = length(poi);
 tc.verifyLength(voi, n, 'length(voi)');
 
@@ -36,10 +40,11 @@ else
     negside_i = floor(n/2):-1:1;
     center_i = floor(n/2) + 1;
     posside_i = floor(n/2)+2:n;
-    tc.verifyEqual(poi(center_i), 0, 'AbsTol', 1e-4, 'poi symmetry.');
+    tc.verifyEqual(poi(center_i), 0, 'AbsTol', 1e-3, ...
+        'poi (center) symmetry.');
 end
 tc.verifyEqual(poi(negside_i), -poi(posside_i), ...
-    'AbsTol', 1e-4, 'poi symmetry.');
+    'AbsTol', 1e-3, 'poi symmetry.');
 tc.verifyEqual(voi(negside_i), voi(posside_i), ...
     'AbsTol', 1e-5, 'voi symmetry.');
 
