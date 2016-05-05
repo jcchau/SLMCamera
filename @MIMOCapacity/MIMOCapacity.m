@@ -6,6 +6,9 @@ classdef MIMOCapacity
     end
     
     methods(Static)
+        
+        C = computeSmithScalarCapacity(x_max, sigma_w)
+        
         de = calculateDiffEntropyFromPmf(pmf, bin_size)
         
         li = convertToLinearIndex(weights, subs)
