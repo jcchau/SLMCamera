@@ -1,12 +1,12 @@
-function testComputeCapacityOnlyAmplitudeConA100(tc)
-% testComputeCapacityOnlyAmplitudeConA100 tests
-% computeCapacityOnlyAmplitudeCon for A = 100.  
+function testComputeCapacityOnlyAmplitudeConShortA100(tc)
+% testComputeCapacityOnlyAmplitudeConShortA100 tests
+% computeCapacityOnlyAmplitudeConShort for A = 100.  
 % Want to ensure that this method under test will at least work for a
 % signal-to-noise ratio of up to 100.  
 
 A = 100;
 
-[C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeCon(A);
+[C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConShort(A);
 
 n = length(poi);
 tc.verifyLength(voi, n, 'length(voi)');

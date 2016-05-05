@@ -35,6 +35,12 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConShort(Alim)
 % and
 % I(X;Y) = I(X';Y')
 
+% TOOD: debug cause of Inf from SmithCapacity.i as called from
+% SmithCapacity.checkCorollary1 for n=3.
+% However, this Inf does not seem to break this algorithm, so ignore for
+% now.
+ws = warning('off', 'MATLAB:integral:NonFiniteValue');
+
 A = Alim;
 n = 2;
 
@@ -54,6 +60,7 @@ I_Fo = SmithCapacity.I(poi, voi);
 
 if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
     C = I_Fo;
+    warning(ws)
     return;
 end
 
@@ -96,7 +103,7 @@ ooptions = optimoptions('fmincon', ...
     'TolX', 1e-15, ...
     'TolFun', 1e-12, ...
     'TolCon', 1e-12, ...
-    'MaxFunEvals', 1e5, ... % Need to increase MaxFunEvals
+    'MaxFunEvals', 1e6, ... % exceed 1e5 for n=23
     'MaxIter', 1e4, ...
     'UseParallel', true, ...
     'Display', 'off'); 
@@ -146,6 +153,7 @@ while(true)
     % Note that SmithCapacity.checkCorollary1 should allow for tolerances.
     if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
         C = I_Fo;
+        warning(ws)
         return;
     else
         % The current value of n is not optimal for A.
@@ -161,7 +169,7 @@ while(true)
         n = n+1;
         
         % Update ooptions.TypicalX to set feature scaling in fmincon.
-        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n/2, n, 1)];
+        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(A/2, n, 1)];
     end % if-else (SmithCapacity.checkCorollary1)
     
 end % while (the n>2 loop)
