@@ -14,6 +14,8 @@ classdef SmithCapacity
         [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
         [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, nStart)
         
+        [C, n] = computeTableOfCapacity(A)
+        
         function r = H(poi, voi)
             % Computes the output entropy given F defined by the discrete
             % points of increase poi, with the corresponding values of
@@ -23,7 +25,9 @@ classdef SmithCapacity
             % we don't need to compute p_Y twice for each value of y.  
             r = -integral( ...
                 @(y) SmithCapacity.xlogx( ...
-                SmithCapacity.p_Y(y, poi, voi)), -Inf, Inf);
+                SmithCapacity.p_Y(y, poi, voi)), -Inf, Inf, ...
+                'AbsTol', 1e-12, ... % default AbsTol is 1e-10
+                'RelTol', 1e-9); % default RelTol is 1e-6 (dominant)
         end % function H
         
         function r = I(poi, voi)
@@ -37,7 +41,7 @@ classdef SmithCapacity
                 @(y) SmithCapacity.aloga_over_b( ...
                 SmithCapacity.p_N(y-x), ...
                 SmithCapacity.p_Y(y, poi, voi)), ...
-                -Inf, Inf);
+                -Inf, Inf, 'AbsTol', 1e-12, 'RelTol', 1e-9);
             r = arrayfun(f, x);
         end % function i
         

@@ -74,6 +74,9 @@ classdef SmithCapacityTest < matlab.unittest.TestCase
         testSmithCapacity_i(tc)
         
         testSmithCapacity_p_Y(tc)
+        
+        testComputeTableOfCapacity(tc)
+        testComputeTableOfCapacityA0_1To1_2(tc)
     end % methods(Test)
     
 end
