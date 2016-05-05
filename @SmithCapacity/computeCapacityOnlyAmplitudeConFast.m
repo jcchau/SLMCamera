@@ -1,5 +1,5 @@
-function [C, poi, voi] = computeCapacityOnlyAmplitudeConShort(Alim)
-% computeCapacityOnlyAmplitudeConShort computes the capacity of scalar
+function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
+% computeCapacityOnlyAmplitudeConFast computes the capacity of scalar
 % channel Y = X + N, where noise N is assumed to be Gaussian with zero mean
 % and unit variance, and X is constrained to values in [-A, A].
 %

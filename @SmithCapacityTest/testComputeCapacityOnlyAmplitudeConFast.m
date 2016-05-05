@@ -1,6 +1,6 @@
-function testComputeCapacityOnlyAmplitudeConShort(tc)
-% testComputeCapacityOnlyAmplitudeConShort ensures that
-% computeCapacityOnlyAmplitudeConShort returns the same result as
+function testcomputeCapacityOnlyAmplitudeConFast(tc)
+% testcomputeCapacityOnlyAmplitudeConFast ensures that
+% computeCapacityOnlyAmplitudeConFast returns the same result as
 % computeCapacityOnlyAmplitudeCon, but runs faster.  
 
 A = 6 * rand();
@@ -12,7 +12,7 @@ tic
 t1 = toc;
 
 tic
-[C2, poi2, voi2] = SmithCapacity.computeCapacityOnlyAmplitudeConShort(A);
+[C2, poi2, voi2] = SmithCapacity.computeCapacityOnlyAmplitudeConFast(A);
 t2 = toc;
 
 %% Verify
