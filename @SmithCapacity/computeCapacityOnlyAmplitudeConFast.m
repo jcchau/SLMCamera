@@ -123,7 +123,7 @@ while(true)
     %% Compute the optimal Fo given n and A.  
     % Maximize I(Z) by minimizing -I(Z) using fmincon.
 
-    fprintf('n=%d ', n);
+    fprintf('A=%f n=%d ', A, n);
     
     % Constraints on Z (lab book #4, p.85-86.)
     Aeq = [ones(1,n), zeros(1,n)];
@@ -153,8 +153,17 @@ while(true)
     
     % Fix precision error for the farthest points of increase in the
     % optimization result.
+    % fmincon seems to return poi in ascending order (but this is not
+    % guaranteed, especially when multiple elements of poi are
+    % approximately equal). But just in case fmincon returns Zo such that
+    % poi is out of order, sort by poi first.
+    if(~issorted(poi))
+        [poi, sortindex] = sort(poi);
+        voi = voi(sortindex); % does not change shape
+    end
     poi(1) = -A;
     poi(end) = A;
+    
     I_Fo = SmithCapacity.I(poi, voi);
     
     fprintf('checking...\n');
