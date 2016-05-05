@@ -119,7 +119,8 @@ ooptions = optimoptions('fmincon', ...
     'TolCon', 1e-12, ...
     'MaxFunEvals', 1e5, ... % Need to increase MaxFunEvals
     'MaxIter', 1e4, ...
-    'UseParallel', true); 
+    'UseParallel', true, ...
+    'Display', 'notify-detailed'); 
 
 %% For n>2
 while(true)
@@ -194,7 +195,7 @@ while(true)
         n = n+1;
         
         % Update ooptions.TypicalX to set feature scaling in fmincon.
-        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(n/2, n, 1)];
+        ooptions.TypicalX = [repmat(1/n, n, 1); repmat(A/2, n, 1)];
     end % if-else (SmithCapacity.checkCorollary1)
     
 end % while (the n>2 loop)
