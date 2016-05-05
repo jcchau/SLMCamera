@@ -27,7 +27,7 @@ classdef SmithCapacity
                 @(y) SmithCapacity.xlogx( ...
                 SmithCapacity.p_Y(y, poi, voi)), -Inf, Inf, ...
                 'AbsTol', 1e-12, ... % default AbsTol is 1e-10
-                'RelTol', 1e-9); % default RelTol is 1e-6 (dominant)
+                'RelTol', 1e-9); % default RelTol is 1e-6
         end % function H
         
         function r = I(poi, voi)
