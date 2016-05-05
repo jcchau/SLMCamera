@@ -12,7 +12,7 @@ classdef SmithCapacity
         
         % Computes capacity according to the Smith1971 algorithm.
         [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
-        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
+        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, nStart)
         
         function r = H(poi, voi)
             % Computes the output entropy given F defined by the discrete

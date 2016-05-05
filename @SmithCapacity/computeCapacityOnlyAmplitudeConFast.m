@@ -1,4 +1,5 @@
-function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
+function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
+    nStart)
 % computeCapacityOnlyAmplitudeConFast computes the capacity of scalar
 % channel Y = X + N, where noise N is assumed to be Gaussian with zero mean
 % and unit variance, and X is constrained to values in [-A, A].
@@ -10,7 +11,7 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
 % This method uses the algorithm presented in Smith1971.  No constraint on
 % variance is assumed.
 %
-%   [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim)
+%   [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, nStart)
 %
 % C is the calculated capacity in nats.
 % poi (vector) is the points of increase in F_o, the optimal distribution
@@ -18,6 +19,10 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
 % voi (vector) is the probability of each point of increase in poi.
 %
 % Alim is the amplitude limit of X, so X is constrained to [-A, A].
+% nStart (optional, for expert use only) specifies the starting value of n
+%   (to skip ahead if you're certain that the optimal n is at least
+%   nStart).  If nStart is omitted, the algorithm will start at n=2 as
+%   specified in Smith1971 and Smith1969.  
 %
 %% Channel normalization:
 % From Smith1969 p. 11--12.
@@ -42,31 +47,36 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim)
 ws = warning('off', 'MATLAB:integral:NonFiniteValue');
 
 A = Alim;
-n = 2;
 
-%% For n==2.
-% The optimal distribution F_o for n=2 is much easier to compute; the code
-% in this section is optimized for the n=2 case.  
+if(nargin>=2 && nStart>2)
+    n = nStart;
+else
+    n = 2;
 
-% Define the distribution F with point of increase (poi) and value of
-% increase (voi).
-poi = [-A, A]';
-voi = [0.5, 0.5]';
+    %% For n==2.
+    % The optimal distribution F_o for n=2 is much easier to compute; the
+    % code in this section is optimized for the n=2 case.
 
-% Mutual information for the optimal distribution of X (given n=2).
-% poi and voi define the optimal distribution for n==2 (farthest
-% equally-probably points of increase).
-I_Fo = SmithCapacity.I(poi, voi);
+    % Define the distribution F with point of increase (poi) and value of
+    % increase (voi).
+    poi = [-A, A]';
+    voi = [0.5, 0.5]';
 
-if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
-    C = I_Fo;
-    warning(ws)
-    return;
-end
+    % Mutual information for the optimal distribution of X (given n=2).
+    % poi and voi define the optimal distribution for n==2 (farthest
+    % equally-probably points of increase).
+    I_Fo = SmithCapacity.I(poi, voi);
 
-% n==2 is no longer optimal, increment n and move on to the next
-% loop (which handles cases where n>2).
-n = n+1;
+    if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
+        C = I_Fo;
+        warning(ws)
+        return;
+    end
+
+    % n==2 is no longer optimal, increment n and move on to the next
+    % loop (which handles cases where n>2).
+    n = n+1;
+end % if(nargin>=2 && nStart>2)
 
 %% Modify the optimization options.  
 % The termination of the optimization is determined by TolX (the
