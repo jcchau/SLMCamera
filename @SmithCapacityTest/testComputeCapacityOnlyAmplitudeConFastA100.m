@@ -1,4 +1,4 @@
-function testcomputeCapacityOnlyAmplitudeConFastA100(tc)
+function testComputeCapacityOnlyAmplitudeConFastA100(tc)
 % testcomputeCapacityOnlyAmplitudeConFastA100 tests
 % computeCapacityOnlyAmplitudeConFast for A = 100.  
 % Want to ensure that this method under test will at least work for a

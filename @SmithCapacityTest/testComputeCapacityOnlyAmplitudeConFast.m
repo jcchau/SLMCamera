@@ -1,4 +1,4 @@
-function testcomputeCapacityOnlyAmplitudeConFast(tc)
+function testComputeCapacityOnlyAmplitudeConFast(tc)
 % testcomputeCapacityOnlyAmplitudeConFast ensures that
 % computeCapacityOnlyAmplitudeConFast returns the same result as
 % computeCapacityOnlyAmplitudeCon, but runs faster.  
