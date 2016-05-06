@@ -140,14 +140,9 @@ indexing_weights = MIMOCapacity.convertToLinearIndexWeights( ...
 
 %% calculate the pmf of y through Monte Carlo simulation
 
-wb = waitbar(0, 'Starting...');
-
 for ii = 1:batches
     
-    waitbar(ii/batches, wb, sprintf('Batch %u of %u', ii, batches));
-    % so the bar graphic shows batch ii completed (even though it just
-    % started), but batches is so big, not worth the extra computation to
-    % make this waitbar appear more accurate.
+    fprintf('Batch %u of %u...\n', ii, batches);
     
     % In this vectorization, each row is a trial in the batch.  
     
@@ -180,8 +175,6 @@ for ii = 1:batches
     end % for jj = 1:length(li_y)
     
 end % for ii = 1:batches
-
-close(wb)
 
 % Compute the PMF.
 % Note that if any trials yielded a y outside of bins in hits, then the
