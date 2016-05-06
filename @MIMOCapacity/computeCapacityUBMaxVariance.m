@@ -18,7 +18,6 @@ function ub_nats = computeCapacityUBMaxVariance(G, x_max, sigma_w)
 
 % maximum variance and standard deviation for each dimension of x.
 max_var = (x_max/2)^2;
-max_stddev_x = x_max/2;
 
 % Covariance of G*x, w, and y.
 cov_Gx = max_var * (G*G');
