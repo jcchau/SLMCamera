@@ -1,19 +1,19 @@
 function [nats, min_nats, variance_H, nbins, trials, h_y, pmf] = ...
-    calculateCapacityForUniformInput( ...
+    calculateCapacityLBForUniformInput( ...
     G, x_max, variance_noise_out, max_nbins, min_trials)
-% calculateCapacityForUniformInput calculates the capacity of a MIMO
-% communication channel with uniformly distributed inputs and with AWGN at
-% the output.  
+% calculateCapacityForUniformInput calculates a lower bound on the capacity
+% of a MIMO communication channel with uniformly distributed inputs and
+% with AWGN at the output.
 %
 % Assume channel:
 % y = G*x + w
 %
 %   [NATS, MIN_NATS, VARIANCE_H, NBINS, TRIALS, H_Y, PMF] = ...
-%       calculateCapacityForUniformInput( ...
+%       calculateCapacityLBForUniformInput( ...
 %       G, X_MAX, VARIANCE_NOISE_OUT, MAX_NBINS, MIN_TRIALS)
 %
-% NATS (scalar) is the upper bound on the capacity (assuming that the
-%   generated PMF is correct).
+% NATS (scalar) is the upper bound on the lower bound on capacity (assuming
+%   that the generated PMF is correct).
 % MIN_NATS (scalar) is the lower bound on the capacity (assuming that the
 %   generated PMF is correct). 
 % VARIANCE_H (scalar) is the variance in the error of entropy of y (due to
@@ -66,7 +66,7 @@ nbins = MIMOCapacity.fillMaxNBins(max_nbins, n_r);
 %% generate the PMF
 
 [pmf, trials, y_min, y_max, ~] = ...
-    MIMOCapacityOld.generateReceivedPmfForUniformInput( ...
+    MIMOCapacityLBUnifX.generateReceivedPmfForUniformInput( ...
     G, x_max, variance_noise_out, nbins, min_trials);
 
 bin_size = (y_max - y_min) ./ nbins';
@@ -80,7 +80,7 @@ h_y_given_x = MIMOCapacity.calculateDiffEntropyOfGaussian( ...
 % Computed according to p.199 of lab book #3 (Imaging Receivers &
 % Photodetector Arrays).
 variance_H = ...
-    MIMOCapacityOld.calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
+    MIMOCapacityLBUnifX.calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
     pmf, trials);
 
 % max and min h(y)

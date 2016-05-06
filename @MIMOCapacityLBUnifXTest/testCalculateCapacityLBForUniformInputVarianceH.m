@@ -1,6 +1,6 @@
-function testCalculateCapacityForUniformInputVarianceH(tc)
-% testCalculateCapacityForUniformInputVarianceH checks that the h_y
-% in calculateCapacityForUniformInput is within 5 standard deviations (as
+function testCalculateCapacityLBForUniformInputVarianceH(tc)
+% testCalculateCapacityLBForUniformInputVarianceH checks that the h_y
+% in calculateCapacityLBForUniformInput is within 5 standard deviations (as
 % specified by variance_H) of the expected result.  
 
 mu = 0;
@@ -12,8 +12,8 @@ nbins = 1e9/8/5;
 trials = 1e9;
 
 [nats, min_nats, variance_H, nbins, trials, h_y, pmf] = ...
-    MIMOCapacityOld.calculateCapacityForUniformInput(0, 1, variance, ...
-    nbins, trials);
+    MIMOCapacityLBUnifX.calculateCapacityLBForUniformInput( ...
+    0, 1, variance, nbins, trials);
 
 [h_y_from_true_pmf, true_pmf] = ...
     MIMOCapacity.calculateDiffEntropyOfClippedNormal( ...

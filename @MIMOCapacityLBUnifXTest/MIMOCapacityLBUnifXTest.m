@@ -1,12 +1,12 @@
-classdef MIMOCapacityOldTest < matlab.unittest.TestCase
-    % MIMOCapacityOldTest are tests belonging to MIMOCapacityOld.
+classdef MIMOCapacityLBUnifXTest < matlab.unittest.TestCase
+    % MIMOCapacityLBUnifXTest are tests belonging to MIMOCapacityLBUnifX.
     
     properties
     end
     
     methods(Test)
         
-        testCalculateCapacityForUniformInputVarianceH(tc)
+        testCalculateCapacityLBForUniformInputVarianceH(tc)
         
         testGenerateReceivedPmfForUniformInput1D(tc)
         testGenerateReceivedPmfForUniformInput1DNoSignal(tc)
