@@ -14,7 +14,7 @@ classdef SmithCapacity
         [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
         [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, nStart)
         
-        [C, n] = computeTableOfCapacity(A)
+        [C, n, t] = computeTableOfCapacity(A, nStart)
         
         function r = H(poi, voi)
             % Computes the output entropy given F defined by the discrete

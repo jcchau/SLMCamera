@@ -1,13 +1,16 @@
-function [C, n] = computeTableOfCapacity(A)
+function [C, n, t] = computeTableOfCapacity(A, nStart)
 % computeTableOfCapacity computes a table of capacity as a function of A.
 %
-%   [C, n] = computeTableOfCapacity(A)
+%   [C, n, t] = computeTableOfCapacity(A)
 %
 % C is the capacity as computed via Smith1971.
 % n is the optimum number of discrete constellation points in X.
+% t is the incremental time needed for the capacity computation.
 %
 % A (vector) is the amplitude limit of X (in Y=X+N).  A should be sorted in
 %   ascending order.  
+% nStart (optional) is the nStart passed to
+%   SmithCapacity.computeCapacityOnlyAmplitudeConFast. (Default: 2)
 %
 % The outputs are computed element-wise for each value in A.
 
@@ -18,13 +21,18 @@ end
 % preallocate output
 C = zeros(size(A));
 n = zeros(size(A));
+t = zeros(size(A));
 
-nStart = 2;
+if(nargin < 2)
+    nStart = 2;
+end
 
 for ii = 1:length(A)
     
+    tic;
     [C(ii), poi, ~] = ...
         SmithCapacity.computeCapacityOnlyAmplitudeConFast(A(ii), nStart);
+    t(ii) = toc;
     
     % Update nStart.
     % If this value of A(ii) has n=n(ii) as the optimal n, then later
