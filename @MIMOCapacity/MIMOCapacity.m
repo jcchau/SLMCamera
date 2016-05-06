@@ -44,6 +44,8 @@ classdef MIMOCapacity
         
         ub_nats = computeCapacityUBElMoslimany2014(G, x_max, sigma_w)
         
+        nats = calculateDiffEntropyOfMVGaussian(K)
+        
     end % methods(Static)
     
 end
