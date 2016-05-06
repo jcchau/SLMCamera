@@ -28,14 +28,14 @@ figx = 20*log10(x_max_to_sigma_w_ratio);
 
 figure();
 hold on
-plot(figx, ub_ElMos, 'b+-');
-plot(figx, ub_MVar, 'rv-');
-plot(figx, lb_MRC, 'g^-');
+plot(figx, ub_ElMos, 'bs-');
+plot(figx, ub_MVar, 'r^-');
+plot(figx, lb_MRC, 'g+-');
 plot(figx, lb_UnifX, 'co-');
 
 legend('ub ElMos', 'ub MVar', 'lb MRC', 'lb UnifX', ...
     'Location', 'NorthWest');
-xlabel('20*log_{10}(x_{max}/\sigma_w)')
+xlabel('20*log_{10}(x_{max}/\sigma_w) dB')
 ylabel('I(y;x) nats')
 title('Capacity bounds for channel matrix G')
 
