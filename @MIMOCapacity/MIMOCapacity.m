@@ -42,6 +42,8 @@ classdef MIMOCapacity
         [mi_nats, nbins, h_y, pmf] = calculateMutualInfoWithUnifGx( ...
             G, x_max, sigma_w, max_nbins, ns)
         
+        ub_nats = computeCapacityUBElMoslimany2014(G, x_max, sigma_w)
+        
     end % methods(Static)
     
 end
