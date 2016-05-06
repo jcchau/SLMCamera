@@ -23,16 +23,21 @@ lb_UnifX = arrayfun( ...
     @(xsr) MIMOCapacity.computeCapacityLBUnifX(G, xsr, 1), ...
     x_max_to_sigma_w_ratio);
 
+%% Plot the result
 figx = 20*log10(x_max_to_sigma_w_ratio);
 
 figure();
-semilogx(figx, ub_ElMos, 'b+');
-semilogx(figx, ub_MVar, 'rv');
-semilogx(figx, lb_MRC, 'g^');
-semilogx(figx, lb_UnifX, 'co');
+hold on
+plot(figx, ub_ElMos, 'b+-');
+plot(figx, ub_MVar, 'rv-');
+plot(figx, lb_MRC, 'g^-');
+plot(figx, lb_UnifX, 'co-');
 
-legend('ub ElMos', 'ub MVar', 'lb MRC', 'lb UnifX');
+legend('ub ElMos', 'ub MVar', 'lb MRC', 'lb UnifX', ...
+    'Location', 'NorthWest');
 xlabel('20*log_{10}(x_{max}/\sigma_w)')
 ylabel('I(y;x) nats')
+title('Capacity bounds for channel matrix G')
+
 end
 
