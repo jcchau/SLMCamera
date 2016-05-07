@@ -50,6 +50,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         
         testRemoveZeroRowsAndCols(tc)
         testRemoveZeroRowsAndColsAllZeros(tc)
+        
+        testCalculateDiffEntropyOfMVGaussian(tc)
     end % methods(Test)
     
 end
