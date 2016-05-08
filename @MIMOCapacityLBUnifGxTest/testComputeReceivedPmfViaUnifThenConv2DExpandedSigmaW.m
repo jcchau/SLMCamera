@@ -1,6 +1,7 @@
 function testComputeReceivedPmfViaUnifThenConv2DExpandedSigmaW(tc)
 % testComputeReceivedPmfViaUnifThenConv2DExpandedSigmaW tests
-% MIMOCapacity.computeReceivedPmfViaUnifThenConv with a basic 2D example.
+% MIMOCapacityLBUnifGx.computeReceivedPmfViaUnifThenConv with a basic 2D
+% example.
 %
 % Unlike testComputeReceivedPmfViaUnifThenConv2D, in this test, we expand
 % the noise variance slightly so that the edge of the uniform PMF for G*x
@@ -14,7 +15,7 @@ nbins = [12; 12];
 
 %% run the method under test
 
-[pmf, delta] = MIMOCapacity.computeReceivedPmfViaUnifThenConv( ...
+[pmf, delta] = MIMOCapacityLBUnifGx.computeReceivedPmfViaUnifThenConv( ...
     G, x_max, sigma_w, ns, nbins);
 
 %% preliminary checks

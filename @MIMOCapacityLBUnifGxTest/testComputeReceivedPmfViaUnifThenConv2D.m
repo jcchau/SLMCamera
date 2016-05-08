@@ -1,6 +1,7 @@
 function testComputeReceivedPmfViaUnifThenConv2D(tc)
 % testComputeReceivedPmfViaUnifThenConv2D tests
-% MIMOCapacity.computeReceivedPmfViaUnifThenConv with a basic 2D example.
+% MIMOCapacityLBUnifGx.computeReceivedPmfViaUnifThenConv with a basic 2D
+% example.
 
 G = [ 1, 0; 0, 1 ];
 x_max = 2;
@@ -10,7 +11,7 @@ nbins = [12; 12];
 
 %% run the method under test
 
-[pmf, delta] = MIMOCapacity.computeReceivedPmfViaUnifThenConv( ...
+[pmf, delta] = MIMOCapacityLBUnifGx.computeReceivedPmfViaUnifThenConv( ...
     G, x_max, sigma_w, ns, nbins);
 
 %% preliminary checks

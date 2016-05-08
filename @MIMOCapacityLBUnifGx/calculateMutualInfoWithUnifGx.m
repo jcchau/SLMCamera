@@ -82,7 +82,7 @@ end
 
 %% generate the PMF of y
 
-[pmf, delta] = MIMOCapacity.computeReceivedPmfViaUnifThenConv( ...
+[pmf, delta] = MIMOCapacityLBUnifGx.computeReceivedPmfViaUnifThenConv( ...
     G, x_max, sigma_w, ns, nbins);
 
 %% compute the outputs

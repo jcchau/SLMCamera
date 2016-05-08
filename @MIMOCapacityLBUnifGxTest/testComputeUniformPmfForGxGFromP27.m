@@ -1,7 +1,7 @@
 function testComputeUniformPmfForGxGFromP27(tc)
 % testComputeUniformPmfForGxGFromP27 tests
-% MIMOCapacity.computeUniformPmfForGx using the channel matrix G from
-% p.26-27 of lab book #4 and x_max = 1.  
+% MIMOCapacityLBUnifGx.computeUniformPmfForGx using the channel matrix G
+% from p.26-27 of lab book #4 and x_max = 1.
 
 G = [1, 1, 0.5;
     0.5, 1, 1];
@@ -13,8 +13,8 @@ nbins = [5, 5];
 y_max = [2.5, 2.5];
 delta = (y_max - y_min) ./ nbins;
 
-[pmf, reachable] = MIMOCapacity.computeUniformPmfForGx(G, x_max, ...
-    y_min, delta, nbins);
+[pmf, reachable] = MIMOCapacityLBUnifGx.computeUniformPmfForGx( ...
+    G, x_max, y_min, delta, nbins);
 
 reachable_expected = ...
     [ 1 1 1 0 0;

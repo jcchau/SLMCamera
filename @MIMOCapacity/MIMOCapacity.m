@@ -31,17 +31,6 @@ classdef MIMOCapacity
         
         msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
         
-        pmf = generateUniformPmfForGx(G, x_max, y_min, delta, nbins)
-        
-        [pmf, reachable] = computeUniformPmfForGx(G, x_max, ...
-            y_min, delta, nbins)
-        
-        [pmf, delta] = computeReceivedPmfViaUnifThenConv( ...
-            G, x_max, sigma_w, ns, nbins)
-        
-        [mi_nats, nbins, h_y, pmf] = calculateMutualInfoWithUnifGx( ...
-            G, x_max, sigma_w, max_nbins, ns)
-        
         ub_nats = computeCapacityUBElMoslimany2014(G, x_max, sigma_w)
         ub_nats = computeCapacityUBMaxVariance(G, x_max, sigma_w)
         lb_nats = computeCapacityLBMRC(G, x_max, sigma_w)

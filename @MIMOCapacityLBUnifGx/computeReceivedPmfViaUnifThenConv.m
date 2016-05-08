@@ -112,7 +112,7 @@ end % d = 1:n_r
 
 %% compute the uniform PMF for G*x
 
-pmf(subpmf_indices{:}) = MIMOCapacity.computeUniformPmfForGx(G, x_max, ...
+pmf(subpmf_indices{:}) = MIMOCapacityLBUnifGx.computeUniformPmfForGx(G, x_max, ...
     unif_y_min', delta', unif_nbins');
 
 %% add the Gaussian noise to the PMF

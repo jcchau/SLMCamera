@@ -9,8 +9,8 @@ y_min = [-.2, -.2];
 delta = [0.1, 0.1];
 nbins = [14, 14];
 
-[pmf, reachable] = MIMOCapacity.computeUniformPmfForGx(G, x_max, ...
-    y_min, delta, nbins);
+[pmf, reachable] = MIMOCapacityLBUnifGx.computeUniformPmfForGx( ...
+    G, x_max, y_min, delta, nbins);
 
 reachable_expected = false(nbins);
 for ii = 2:13

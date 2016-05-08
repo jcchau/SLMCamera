@@ -8,8 +8,8 @@ delta = repmat(1, 1, 3);
 y_min = zeros(1,3) - 2*delta;
 nbins = x_max' ./ delta + 4;
 
-[pmf, reachable] = MIMOCapacity.computeUniformPmfForGx(G, x_max, ...
-    y_min, delta, nbins);
+[pmf, reachable] = MIMOCapacityLBUnifGx.computeUniformPmfForGx( ...
+    G, x_max, y_min, delta, nbins);
 
 reachable_expected = false(nbins);
 reachable_expected(2:end-1, 2:end-1, 2:end-1) = true;
