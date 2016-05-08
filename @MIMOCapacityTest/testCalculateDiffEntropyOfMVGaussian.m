@@ -13,7 +13,7 @@ nats_expected = 0.5 * log((2*pi*exp(1))^n_r * det(K));
 
 nats_test = MIMOCapacity.calculateDiffEntropyOfMVGaussian(K);
 
-tc.verifyEqual(nats_test, nats_expected, ...
+tc.verifyEqual(nats_test, nats_expected, 'AbsTol', 1e-15, ...
     'Calculated differential entropy does not match.');
 
 end
