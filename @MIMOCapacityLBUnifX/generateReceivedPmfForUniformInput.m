@@ -169,6 +169,9 @@ for ii = 1:batches
     % NOTE: if we do "for jj = li_y", it does NOT iterate through all of
     % the elements of li_y, but instead just does one iteration in the
     % loop, so it's necessary to do "for jj = 1:length(li_y)" instead.
+    % NOTE: although histcounts is another (recommended?) way to do this
+    % tally, it takes too much memory (probably because we have so many
+    % bins).
     for jj = 1:length(li_y)
         index_bin = li_y(jj);
         hits(index_bin) = hits(index_bin) + 1;
