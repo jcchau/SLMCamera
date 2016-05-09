@@ -6,6 +6,12 @@ classdef SmithCapacity
     properties(Constant)
         % D is the noise entropy, which is 1/2 * log(2*pi*e)
         D = 0.5 * (log(2*pi)+1);
+        
+        % abortA is the maximum Alim for which the
+        % computeCapacityOnlyAmplitudeCon* methods will try to compute
+        % capacity.
+        % This is the default value.
+        abortA = 32;
     end
     
     methods(Static)
