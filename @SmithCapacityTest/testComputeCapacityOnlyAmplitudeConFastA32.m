@@ -1,11 +1,17 @@
-function testComputeCapacityOnlyAmplitudeConFastA100(tc)
-% testcomputeCapacityOnlyAmplitudeConFastA100 tests
-% computeCapacityOnlyAmplitudeConFast for A = 100.  
+function testComputeCapacityOnlyAmplitudeConFastA32(tc)
+% testcomputeCapacityOnlyAmplitudeConFastA32 tests
+% computeCapacityOnlyAmplitudeConFast for A = 32.  
 % Want to ensure that this method under test will at least work for a
-% signal-to-noise ratio of up to 100.  
+% signal-to-noise ratio of up to 32 (a little larger than 30dB =
+% 10^(30/20)).  
 %
 % To avoid taking excessively long on weaker computers, only go up to A=12
 % unless we have at least 12 parpool workers.  
+%
+% This was originally attempted for A=100.  However, even on the SCC with
+% 12 MATLAB workers we only made it to n=87 before reaching the time limit.
+% And then, resuming at n=87, we only got to n=94 before timing out again.
+% Finally, starting at n=100, we reached n=114 before timing out.
 
 pp = gcp();
 if(isempty(pp) || pp.NumWorkers < 12)
@@ -17,7 +23,7 @@ if(isempty(pp) || pp.NumWorkers < 12)
     [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast( ...
         A, nStart);
 else
-    A = 100;
+    A = 32;
     % Don't use nStart to be thorough.
     [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast(A);
 end

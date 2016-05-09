@@ -68,7 +68,7 @@ classdef SmithCapacityTest < matlab.unittest.TestCase
         testComputeCapacityOnlyAmplitudeConA6(tc)
         
         testComputeCapacityOnlyAmplitudeConFast(tc)
-        testComputeCapacityOnlyAmplitudeConFastA100(tc)
+        testComputeCapacityOnlyAmplitudeConFastA32(tc)
         testComputeCapacityOnlyAmplitudeConFast_nStart(tc)
         
         testSmithCapacity_i(tc)
