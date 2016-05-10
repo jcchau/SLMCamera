@@ -39,7 +39,7 @@ tx_template = [ -tx_side/2, -tx_side/2, txheight; ...
 nverticestx = size(tx_template, 1);
 
 % The ratios of x_max to sigma_w in which to run evaluate capacity.
-snr_dB = [60, 80, 100, 120];
+snr_dB = [60, 80, 100];
 snr = 10.^(snr_dB/20);
 
 %% trial parameters
