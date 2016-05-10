@@ -185,6 +185,7 @@ for ipix = 1:length(npix)
         else
             % Too many dimensions.  Assuming 1e9/8/5 bins, we'd average
             % approximately 4 bins per dimension if we had 12 dimensions.  
+            fprintf('Skipped UnifX.');
             trial_lb_UnifX(ipix,isnr) = NaN;
         end
         
@@ -194,6 +195,7 @@ for ipix = 1:length(npix)
             trial_lb_UnifGx(ipix,isnr) = ...
                 MIMOCapacity.computeCapacityLBUnifGx(H, snr(isnr), 1);
         else
+            fprintf('Skipped UnifGx.');
             trial_lb_UnifGx(ipix,isnr) = NaN;
         end
     end % for isnr
