@@ -22,6 +22,8 @@ classdef SmithCapacity
         
         [C, n, t] = computeTableOfCapacity(A, nStart)
         
+        nStart = lookupNStart(A)
+        
         function r = H(poi, voi)
             % Computes the output entropy given F defined by the discrete
             % points of increase poi, with the corresponding values of
