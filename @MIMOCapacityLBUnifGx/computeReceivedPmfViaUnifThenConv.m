@@ -145,7 +145,7 @@ for d = 1:n_r
     pmf_w = cdf_w_at_bb(2:end) - cdf_w_at_bb(1:end-1);
     
     % reshape pmf_w to be along dimension d
-    shape_pmf_w = ones(1, n_r); % row vector
+    shape_pmf_w = ones(1, n_r+1); % row vector; add last singleton dim in case n_r is 1.
     shape_pmf_w(d) = w_nbins(d);
     pmf_w = reshape(pmf_w, shape_pmf_w);
     
