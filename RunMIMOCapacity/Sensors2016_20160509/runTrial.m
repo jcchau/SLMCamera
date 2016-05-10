@@ -127,7 +127,7 @@ end % for isnr
 %% For the traditional imaging VLC receiver
 
 npix_rows = [ 1, 2, 3, 10, 100 ];
-npix_cols = [ 2, 2, 2, 10, 100 ];
+npix_cols = [ 2, 2, 3, 10, 100 ];
 npix = npix_rows .* npix_cols;
 
 trial_rank = zeros(length(npix), 1);
