@@ -5,7 +5,7 @@ function startSimulations(runTrial_cmd, savedir)
 srand = 20160509;
 rng(srand);
 
-ntrials = 2;
+ntrials = 100;
 srand_trial = randi(intmax, ntrials, 1);
 
 for ii = 1:ntrials
