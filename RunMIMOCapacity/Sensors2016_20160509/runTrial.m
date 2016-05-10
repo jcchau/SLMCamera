@@ -1,6 +1,11 @@
 function runTrial(ii_s, srand_s, savedir)
-%RUNTRIAL Summary of this function goes here
-%   Detailed explanation goes here
+% RUNTRIAL Executes a single trial of the simulation and saves the result.
+% Executed by startSimulations.m.
+%
+% compile as:
+% mcc -mv -R -nodisplay -R -singleCompThread runTrial.m
+%
+% Needs to have SLMCamera and geolib in the path while compiling. 
 
 %% load trial parameters
 i_trial = sscanf(ii_s, '%d');
@@ -34,7 +39,7 @@ tx_template = [ -tx_side/2, -tx_side/2, txheight; ...
 nverticestx = size(tx_template, 1);
 
 % The ratios of x_max to sigma_w in which to run evaluate capacity.
-snr_dB = [-20, 0, 20] + 40;
+snr_dB = [60, 80, 100, 120];
 snr = 10.^(snr_dB/20);
 
 %% trial parameters
@@ -100,22 +105,29 @@ trial_cn_dmd = cond(G_dmd);
 trial_ub_ElMos_dmd = zeros(1, length(snr));
 trial_lb_MRC_dmd = zeros(1, length(snr));
 trial_lb_UnifX_dmd = zeros(1, length(snr));
+trial_lb_UnifGx_dmd = zeros(1, length(snr));
 
 G_dmd = MIMOCapacity.removeZeroRowsAndCols(G_dmd);
 
 for isnr = 1:length(snr)
+    fprintf('DMD SNR=%ddB UB ElMos...\n', snr_dB(isnr));
     trial_ub_ElMos_dmd(isnr) = ...
         MIMOCapacity.computeCapacityUBElMoslimany2014(G_dmd, snr(isnr), 1);
+    fprintf('DMD SNR=%ddB LB MRC...\n', snr_dB(isnr));
     trial_lb_MRC_dmd(isnr) = ...
         MIMOCapacity.computeCapacityLBMRC(G_dmd, snr(isnr), 1);
+    fprintf('DMD SNR=%ddB LB UnifX...\n', snr_dB(isnr));
     trial_lb_UnifX_dmd(isnr) = ...
         MIMOCapacity.computeCapacityLBUnifX(G_dmd, snr(isnr), 1);
+    fprintf('DMD SNR=%ddB LB UnifGx...\n', snr_dB(isnr));
+    trial_lb_UnifGx_dmd(isnr) = ...
+        MIMOCapacity.computeCapacityLBUnifGx(G_dmd, snr(isnr), 1);
 end % for isnr
 
 %% For the traditional imaging VLC receiver
 
-npix_rows = [ 1, 2, 3, 10, 100, 400, 600, 720, 1080 ];
-npix_cols = [ 2, 2, 2, 10, 100, 600, 800, 1280, 1920 ];
+npix_rows = [ 1, 2, 3, 10, 100 ];
+npix_cols = [ 2, 2, 2, 10, 100 ];
 npix = npix_rows .* npix_cols;
 
 trial_rank = zeros(length(npix), 1);
@@ -123,6 +135,7 @@ trial_cn = zeros(length(npix), 1);
 trial_ub_ElMos = zeros(length(npix), length(snr));
 trial_lb_MRC = zeros(length(npix), length(snr));
 trial_lb_UnifX = zeros(length(npix), length(snr));
+trial_lb_UnifGx = zeros(length(npix), length(snr));
 
 for ipix = 1:length(npix)
     
@@ -155,12 +168,16 @@ for ipix = 1:length(npix)
     fprintf('nrows_nonzero=%d\n', nrows_nonzero);
     
     for isnr = 1:length(snr)
-        fprintf('Computing metrics for %dx%d, snr=%ddB...\n', ...
+        fprintf('Computing ElMos for %dx%d, snr=%ddB...\n', ...
             npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         trial_ub_ElMos(ipix,isnr) = ...
             MIMOCapacity.computeCapacityUBElMoslimany2014(H, snr(isnr), 1);
+        fprintf('Computing MRC for %dx%d, snr=%ddB...\n', ...
+            npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         trial_lb_MRC(ipix,isnr) = ...
             MIMOCapacity.computeCapacityLBMRC(H, snr(isnr), 1);
+        fprintf('Computing UnifX for %dx%d, snr=%ddB...\n', ...
+            npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         if(nrows_nonzero <= 12)
             trial_lb_UnifX(ipix,isnr) = ...
                 MIMOCapacity.computeCapacityLBUnifX(H, snr(isnr), 1);
@@ -169,6 +186,10 @@ for ipix = 1:length(npix)
             % approximately 4 bins per dimension if we had 12 dimensions.  
             trial_lb_UnifX(ipix,isnr) = NaN;
         end
+        fprintf('Computing UnifGx for %dx%d, snr=%ddB...\n', ...
+            npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
+        trial_lb_UnifGx(ipix,isnr) = ...
+            MIMOCapacity.computeCapacityLBUnifGx(H, snr(isnr), 1);
     end % for isnr
     
 end % for ipix
@@ -186,7 +207,8 @@ save(fname, '-v7.3', 'snr_dB', 'npix', ...
     'trial_rank_dmd', 'trial_cn_dmd', ...
     'trial_ub_ElMos_dmd', 'trial_lb_MRC_dmd', 'trial_lb_UnifX_dmd', ...
     'trial_rank', 'trial_cn', ...
-    'trial_ub_ElMos', 'trial_lb_MRC', 'trial_lb_UnifX')
+    'trial_ub_ElMos', 'trial_lb_MRC', 'trial_lb_UnifX', ...
+    'trial_lb_UnifGx_dmd', 'trial_lb_UnifGx')
 
 fprintf('Done.\n');
 
