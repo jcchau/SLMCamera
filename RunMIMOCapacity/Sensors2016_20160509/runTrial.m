@@ -176,6 +176,7 @@ for ipix = 1:length(npix)
             npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         trial_lb_MRC(ipix,isnr) = ...
             MIMOCapacity.computeCapacityLBMRC(H, snr(isnr), 1);
+        
         fprintf('Computing UnifX for %dx%d, snr=%ddB...\n', ...
             npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         if(nrows_nonzero <= 12)
@@ -186,10 +187,15 @@ for ipix = 1:length(npix)
             % approximately 4 bins per dimension if we had 12 dimensions.  
             trial_lb_UnifX(ipix,isnr) = NaN;
         end
+        
         fprintf('Computing UnifGx for %dx%d, snr=%ddB...\n', ...
             npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
-        trial_lb_UnifGx(ipix,isnr) = ...
-            MIMOCapacity.computeCapacityLBUnifGx(H, snr(isnr), 1);
+        if(nrows_nonzero <= 10) % computation time constraint for linprog.
+            trial_lb_UnifGx(ipix,isnr) = ...
+                MIMOCapacity.computeCapacityLBUnifGx(H, snr(isnr), 1);
+        else
+            trial_lb_UnifGx(ipix,isnr) = NaN;
+        end
     end % for isnr
     
 end % for ipix
