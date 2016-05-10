@@ -6,15 +6,24 @@ classdef SmithCapacity
     properties(Constant)
         % D is the noise entropy, which is 1/2 * log(2*pi*e)
         D = 0.5 * (log(2*pi)+1);
+        
+        % abortA is the maximum Alim for which the
+        % computeCapacityOnlyAmplitudeCon* methods will try to compute
+        % capacity.
+        % This is the default value.
+        abortA = 30;
     end
     
     methods(Static)
         
         % Computes capacity according to the Smith1971 algorithm.
         [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
-        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, nStart)
+        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
+            nStart, abortA)
         
         [C, n, t] = computeTableOfCapacity(A, nStart)
+        
+        nStart = lookupNStart(A)
         
         function r = H(poi, voi)
             % Computes the output entropy given F defined by the discrete

@@ -1,5 +1,5 @@
 function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
-    nStart)
+    nStart, abortA)
 % computeCapacityOnlyAmplitudeConFast computes the capacity of scalar
 % channel Y = X + N, where noise N is assumed to be Gaussian with zero mean
 % and unit variance, and X is constrained to values in [-A, A].
@@ -23,6 +23,14 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
 %   (to skip ahead if you're certain that the optimal n is at least
 %   nStart).  If nStart is omitted, the algorithm will start at n=2 as
 %   specified in Smith1971 and Smith1969.  
+% abortA (optional, default: SmithCapacity.abortA) is the maximum Alim for
+%   which this method will try to compute the capacity.  Since this method
+%   takes longer to complete for larger Alim, this parameter is present to
+%   prevent this method from accidentally taking excessively long.  Set
+%   abortA=Alim to bypass this safety mechanism.
+%
+% If Alim>abortA, this method will throw an error with MSGID
+% 'SmithCapacity:computeCapacityOnlyAmplitudeConFast:abortA'.
 %
 %% Channel normalization:
 % From Smith1969 p. 11--12.
@@ -39,6 +47,15 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
 % H(N') = H(N) - log(sigma_N^2)
 % and
 % I(X;Y) = I(X';Y')
+
+% Check abortA
+if(nargin < 3)
+    abortA = SmithCapacity.abortA;
+end
+if(Alim > abortA)
+    error('SmithCapacity:abortA', ...
+        'Alim=%f is greater than abortA=%f; aborting.', Alim, abortA);
+end
 
 % TOOD: debug cause of Inf from SmithCapacity.i as called from
 % SmithCapacity.checkCorollary1 for n=3.
