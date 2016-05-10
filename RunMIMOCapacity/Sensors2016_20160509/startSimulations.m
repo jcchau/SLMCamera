@@ -6,7 +6,7 @@ srand = 20160509;
 rng(srand);
 
 ntrials = 2;
-srand_trial = randi(2^32, ntrials, 1);
+srand_trial = randi(intmax, ntrials, 1);
 
 for ii = 1:ntrials
     matlab_cmd = sprintf('%s %d %d "%s"', ...

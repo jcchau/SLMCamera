@@ -4,7 +4,7 @@ function runTrial(ii_s, srand_s, savedir)
 
 %% load trial parameters
 i_trial = sscanf(ii_s, '%d');
-srand = sscanf(srand_s, 'd');
+srand = sscanf(srand_s, '%d');
 rng(srand);
 
 %% common parameters
@@ -105,11 +105,11 @@ G_dmd = MIMOCapacity.removeZeroRowsAndCols(G_dmd);
 
 for isnr = 1:length(snr)
     trial_ub_ElMos_dmd(isnr) = ...
-        MIMOCapacity.computeCapacityUBElMoslimany2014(G_dmd, snr, 1);
+        MIMOCapacity.computeCapacityUBElMoslimany2014(G_dmd, snr(isnr), 1);
     trial_lb_MRC_dmd(isnr) = ...
-        MIMOCapacity.computeCapacityLBMRC(G, snr, 1);
+        MIMOCapacity.computeCapacityLBMRC(G_dmd, snr(isnr), 1);
     trial_lb_UnifX_dmd(isnr) = ...
-        MIMOCapacity.computeCapacityLBUnifX(G, snr, 1);
+        MIMOCapacity.computeCapacityLBUnifX(G_dmd, snr(isnr), 1);
 end % for isnr
 
 %% For the traditional imaging VLC receiver
@@ -158,12 +158,12 @@ for ipix = 1:length(npix)
         fprintf('Computing metrics for %dx%d, snr=%ddB...\n', ...
             npix_cols(ipix), npix_rows(ipix), snr_dB(isnr));
         trial_ub_ElMos(ipix,isnr) = ...
-            MIMOCapacity.computeCapacityUBElMoslimany2014(H, snr, 1);
+            MIMOCapacity.computeCapacityUBElMoslimany2014(H, snr(isnr), 1);
         trial_lb_MRC(ipix,isnr) = ...
-            MIMOCapacity.computeCapacityLBMRC(H, snr, 1);
+            MIMOCapacity.computeCapacityLBMRC(H, snr(isnr), 1);
         if(nrows_nonzero <= 12)
             trial_lb_UnifX(ipix,isnr) = ...
-                MIMOCapacity.computeCapacityLBUnifX(H, snr, 1);
+                MIMOCapacity.computeCapacityLBUnifX(H, snr(isnr), 1);
         else
             % Too many dimensions.  Assuming 1e9/8/5 bins, we'd average
             % approximately 4 bins per dimension if we had 12 dimensions.  
@@ -182,7 +182,8 @@ fname = sprintf('%s/trial%d.mat', savedir, i_trial);
 % Warning: Variable 'S_dmd' cannot be saved to a MAT-file whose version is
 % older than 7.3.
 % To save this variable, use the -v7.3 switch.
-save(fname, '-v7.3', 'trial_rank_dmd', 'trial_cn_dmd', ...
+save(fname, '-v7.3', 'snr_dB', 'npix', ...
+    'trial_rank_dmd', 'trial_cn_dmd', ...
     'trial_ub_ElMos_dmd', 'trial_lb_MRC_dmd', 'trial_lb_UnifX_dmd', ...
     'trial_rank', 'trial_cn', ...
     'trial_ub_ElMos', 'trial_lb_MRC', 'trial_lb_UnifX')
