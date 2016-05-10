@@ -11,14 +11,15 @@ classdef SmithCapacity
         % computeCapacityOnlyAmplitudeCon* methods will try to compute
         % capacity.
         % This is the default value.
-        abortA = 32;
+        abortA = 30;
     end
     
     methods(Static)
         
         % Computes capacity according to the Smith1971 algorithm.
         [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, delta)
-        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, nStart)
+        [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
+            nStart, abortA)
         
         [C, n, t] = computeTableOfCapacity(A, nStart)
         
