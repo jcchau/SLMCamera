@@ -2,7 +2,17 @@ function nStart = lookupNStart(A)
 % lookupNStart returns an appropriate nStart for a given A (based on
 % previous trials).
 
+% table columns are [A, nStart]
 table = [ ...
+    32, 43;
+    28, 38; % Up to A=30
+    27, 34;
+    26, 33;
+    25, 32;
+    24, 30;
+    23, 29;
+    22, 28;
+    21, 27;
     20, 25;
     19.3, 27;
     18.5, 26;
