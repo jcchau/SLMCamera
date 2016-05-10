@@ -4,7 +4,10 @@ function nStart = lookupNStart(A)
 
 % table columns are [A, nStart]
 table = [ ...
-    32, 43;
+    35, 46;
+    34, 43;
+    32, 42;
+    31, 41;
     28, 38; % Up to A=30
     27, 34;
     26, 33;
