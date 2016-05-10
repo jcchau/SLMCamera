@@ -19,11 +19,16 @@ if(isempty(pp) || pp.NumWorkers < 12)
     % with a lot of parpool workers.  
     A = 12;
     nStart = 12; % skip to the n=12 to be fast
+    tol_poi = 1e-3;
+    tol_voi = 1e-5;
     
     [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast( ...
         A, nStart);
 else
     A = 32;
+    tol_poi = 1e-2;
+    tol_voi = 1e-3;
+    
     % Don't use nStart to be thorough.
     [C, poi, voi] = SmithCapacity.computeCapacityOnlyAmplitudeConFast(A);
 end
@@ -46,13 +51,13 @@ else
     negside_i = floor(n/2):-1:1;
     center_i = floor(n/2) + 1;
     posside_i = floor(n/2)+2:n;
-    tc.verifyEqual(poi(center_i), 0, 'AbsTol', 1e-3, ...
+    tc.verifyEqual(poi(center_i), 0, 'AbsTol', tol_poi, ...
         'poi (center) symmetry.');
 end
 tc.verifyEqual(poi(negside_i), -poi(posside_i), ...
-    'AbsTol', 1e-3, 'poi symmetry.');
+    'AbsTol', tol_poi, 'poi symmetry.');
 tc.verifyEqual(voi(negside_i), voi(posside_i), ...
-    'AbsTol', 1e-5, 'voi symmetry.');
+    'AbsTol', tol_voi, 'voi symmetry.');
 
 % check voi ascending
 for ii = length(posside_i)-1;
