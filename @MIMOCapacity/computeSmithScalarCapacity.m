@@ -15,10 +15,12 @@ function C = computeSmithScalarCapacity(x_max, sigma_w)
 
 Alim = x_max ./ (2 * sigma_w);
 
+nStart = SmithCapacity.lookupNStart(Alim);
+
 try
 % Use the fast algorithm (instead of the one that matches the flow-chart
 % from Smith1971).  
-C = SmithCapacity.computeCapacityOnlyAmplitudeConFast(Alim);
+C = SmithCapacity.computeCapacityOnlyAmplitudeConFast(Alim, nStart);
 catch me
     if(strcmp(me.identifier, 'SmithCapacity:abortA'))
         C = NaN;
