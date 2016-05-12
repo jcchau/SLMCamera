@@ -81,6 +81,7 @@ mean_lb_UnifX = reshape(mean_lb_UnifX, nres, nsnr);
 
 % Drop UnifGx and UnifX for npix>20.
 mean_lb = zeros(nres, nsnr);
+mean_lb(npix>20,:) = mean_lb_MRC(npix>20,:);
 mean_lb(npix<=20,:) = max(mean_lb_MRC(npix<=20,:), ...
     max(mean_lb_UnifGx(npix<=20,:), mean_lb_UnifX(npix<=20,:)));
 
