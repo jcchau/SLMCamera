@@ -13,6 +13,10 @@ function variance = calculateVarianceOfDiffEntropyFromMonteCarloPmf( ...
 % PMF (matrix) is the probability mass function generated through Monte
 %   Carlo simulations. 
 % NUM_TRIALS (scalar) is the number of trials used to generate the PMF.  
+%
+% WARNING: The calculated variance does not account for the consistent
+% underestimation of the differential entropy as explained on p.36-38 of
+% lab book #4.  
 
 % unroll pmf and drop any values that are zero.
 % Justification: lab book #3, p. 183-184.  

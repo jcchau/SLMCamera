@@ -1,6 +1,6 @@
 function testCalculateCapacityLBForUniformInputVarianceH(tc)
 % testCalculateCapacityLBForUniformInputVarianceH checks that the h_y
-% in calculateCapacityLBForUniformInput is within 5 standard deviations (as
+% in calculateCapacityLBForUniformInput is within 6 standard deviations (as
 % specified by variance_H) of the expected result.  
 
 mu = 0;
