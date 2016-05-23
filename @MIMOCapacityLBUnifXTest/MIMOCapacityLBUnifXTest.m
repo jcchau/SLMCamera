@@ -11,6 +11,9 @@ classdef MIMOCapacityLBUnifXTest < matlab.unittest.TestCase
         % explained on p.36-38 of lab book #4.  
         %testCalculateCapacityLBForUniformInputVarianceH(tc)
         
+        testApproximateUnifXLBForNegligibleNoiseAndFullColRankGScalar(tc)
+        testApproximateUnifXLBForNegligibleNoiseAndFullColRankG2Indep(tc)
+        
         testGenerateReceivedPmfForUniformInput1D(tc)
         testGenerateReceivedPmfForUniformInput1DNoSignal(tc)
         testGenerateReceivedPmfForUniformInput1DNoNoise(tc)

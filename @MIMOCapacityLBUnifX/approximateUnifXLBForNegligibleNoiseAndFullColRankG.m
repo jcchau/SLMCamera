@@ -1,15 +1,18 @@
-function lb = approximateUnifXLBForNegligibleNoiseAndFullColRankG( ...
+function [lb, Q, h_x, h_QTransposeGx, h_QTransposew] = ...
+    approximateUnifXLBForNegligibleNoiseAndFullColRankG( ...
     G, x_max, sigma_w)
 % approximateUnifXLBForNegligibleNoiseAndFullColRankG approximates a lower
 % bound on the capacity using a uniformly distributed x by assuming that
 % the noise is negligible, given that the channel matrix G is full column
 % rank.  
 %
-%   lb = approximateUnifXLBForNegligibleNoiseAndFullColRankG( ...
-%       G, x_max, sigma_w)
+%   [lb, Q, h_x, h_QTransposeGx, h_QTransposew] = ...
+%       approximateUnifXLBForNegligibleNoiseAndFullColRankG( ...
+%           G, x_max, sigma_w)
 %
 % lb (scalar) is I(x;y) (as the lower bound on capacity) in nats computed
 %   using the assumption that the noise is negligible.
+% Q, h_x, h_QTransposeGx, and h_QTransposew are provided for debugging.
 %
 % G is the channel matrix.
 % x_max (scalar) is the maximum transmit signal value for each transmitter.
