@@ -23,6 +23,7 @@ classdef MIMOCapacityLBUnifX
             G, x_max, variance_noise_out, bins_per_dimension, ...
             min_trials, trials_per_batch)
         
+        W = gramSchmidt(V)
     end
     
 end
