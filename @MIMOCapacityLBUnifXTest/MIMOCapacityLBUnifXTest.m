@@ -21,6 +21,8 @@ classdef MIMOCapacityLBUnifXTest < matlab.unittest.TestCase
         testGenerateReceivedPmfForUniformInput2DCorrelatedGNoNoise(tc)
         testGenerateReceivedPmfForUniformInput3D(tc)
         
+        gramSchmidtTest(tc)
+        
     end
     
 end
