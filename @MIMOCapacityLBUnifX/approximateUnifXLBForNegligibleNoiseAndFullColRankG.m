@@ -30,8 +30,11 @@ if(rank(G) < n_t)
         'Parameter G must have full column rank.');
 end
 
-% "economy size" QR-decomposition of G
-[Q, ~] = qr(G, 0);
+% "economy size" QR-decomposition of G.
+% Replaced with Gram-Schmidth orthogonalization to keep A=Q'*G positive.
+% We need Q s.t. A is positive for
+% testApproximateUnifXLBForNegligibleNoiseAndFullColRankG3x2.
+Q = MIMOCapacityLBUnifX.gramSchmidt(G);
 
 A = Q'*G;
 
