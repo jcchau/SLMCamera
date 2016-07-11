@@ -1,8 +1,7 @@
 function optimal = checkCorollary1(A, poi, voi, I_Fo)
-% ??? How do we check that i(x, poi, voi) <= I_Fo for all x in
-% [-A, A]?
+% Check that i(x, poi, voi) <= I_Fo for all x in [-A, A].
 %
-% poi is assumed to be ascending order
+% poi is assumed to be ascending order.
 
 % Due to precision errors, MATLAB may calculate i(x;F)>I(F_o) even if
 % i(x;F) is actually equal or slightly less than I(F_o).  To avoid this
