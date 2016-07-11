@@ -11,7 +11,7 @@ function [C, poi, voi] = computeCapacityOnlyAmplitudeConFast(Alim, ...
 % This method uses the algorithm presented in Smith1971.  No constraint on
 % variance is assumed.
 %
-%   [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, nStart)
+%   [C, poi, voi] = computeCapacityOnlyAmplitudeCon(Alim, nStart, abortA)
 %
 % C is the calculated capacity in nats.
 % poi (vector) is the points of increase in F_o, the optimal distribution
@@ -57,7 +57,7 @@ if(Alim > abortA)
         'Alim=%f is greater than abortA=%f; aborting.', Alim, abortA);
 end
 
-% TOOD: debug cause of Inf from SmithCapacity.i as called from
+% TODO: debug cause of Inf from SmithCapacity.i as called from
 % SmithCapacity.checkCorollary1 for n=3.
 % However, this Inf does not seem to break this algorithm, so ignore for
 % now.
