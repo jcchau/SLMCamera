@@ -43,6 +43,9 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testRemoveZeroRowsAndColsAllZeros(tc)
         
         testCalculateDiffEntropyOfMVGaussian(tc)
+        
+        % Test simplifyChannelMatrix and computeQTTransform
+        testComputeQTTransformNoDependence(tc)
     end % methods(Test)
     
 end

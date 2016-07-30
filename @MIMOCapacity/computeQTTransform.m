@@ -17,7 +17,7 @@ function Q = computeQTTransform(G)
 % Preallocate matrix Q.
 % Will need to remove extra columns later if G does not have full column
 % rank.
-Q = size(n_r, n_t);
+Q = zeros(n_r, n_t);
 
 % Number of columns computed for Q.
 num_col_Q = 0;
