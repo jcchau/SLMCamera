@@ -31,7 +31,7 @@ end
 % Check that each column is normalized.
 for ii = 1:numcols
     tc.verifyEqual(norm(Q(:,ii)), 1, 'AbsTol', 1e-15, ...
-        sprintf('Column %d is not orthogonal.', ii));
+        sprintf('Column %d is not normalized.', ii));
 end
 
 % Check that each column of G can be represented as a linear combination of
