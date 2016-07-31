@@ -82,7 +82,5 @@ clear n_r n_t normalized_GB
 
 Q = MIMOCapacity.computeQTTransform(G_B);
 
-% TODO: Test this method and computeQTTransform.
-
 end
 
