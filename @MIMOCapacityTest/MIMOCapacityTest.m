@@ -47,6 +47,7 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         % Test simplifyChannelMatrix and computeQTTransform
         testComputeQTTransformNoDependence(tc)
         testComputeQTTransformDependentColMoreTx(tc)
+        testComputeQTTransformDependentRx(tc)
     end % methods(Test)
     
 end
