@@ -2,7 +2,18 @@ classdef MIMOCapacity
     %MIMOCAPACITY Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
+    properties (Constant)
+        
+        % If there is at least MinOrthogonalPartFactor of the original
+        % column left after orthognonalization, then this column is
+        % linearly independent of the previous columns.
+        % 1e-4 was chosen on p. 127 of lab book 4 with the reasoning that
+        % if two channels have the same noise, but one channel is 1e-4 as
+        % strong as the other channel, then the former's contribution to
+        % the capacity would be negligible compared to the latter's.
+        % Otherwise, consider this column to be linearly dependent on the
+        % previous columns.
+        MinOrthogonalPartFactor = 1e-4;
     end
     
     methods(Static)

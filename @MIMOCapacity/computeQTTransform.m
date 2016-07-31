@@ -33,18 +33,9 @@ for iG = 1:n_t
         colG = colG - dot(colG, Q(:,iQ)) * Q(:,iQ);
     end % for iQ
     
-    % If there is at least 1e-4 of the original colG left after
-    % orthognonalization, then this column is linearly independent of the
-    % previous columns.  
-    % 1e-4 was chosen on p. 127 of lab book 4 with the reasoning that if
-    % two channels have the same noise, but one channel is 1e-4 as strong
-    % as the other channel, then the former's contribution to the capacity
-    % would be negligible compared to the latter's.  
-    % Otherwise, consider this column to be linearly dependent on the
-    % previous columns.  
     % This non-zero threshold is chosen to avoid mistaking colG as linearly
     % independent due to a floating-point math precision error.  
-    if(norm(colG) > orig_magnitude/1e4)
+    if(norm(colG) > MIMOCapacity.MinOrthogonalPartFactor * orig_magnitude)
         % Normalize the orthogonalized colG and store it as a new column of
         % Q.  
         num_col_Q = num_col_Q + 1;

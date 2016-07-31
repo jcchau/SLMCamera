@@ -38,7 +38,8 @@ for ii = 1:n_t
 
     % The minimum gain for a component of this column that would be
     % considered non-negligible.  
-    min_component_gain = norm(G_A(:,ii)) / 1e4;
+    min_component_gain = ...
+        MIMOCapacity.MinOrthogonalPartFactor * norm(G_A(:,ii));
     
     combined = false;
     
