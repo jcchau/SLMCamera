@@ -8,7 +8,7 @@ numrows = randi(numcols);
 G = rand(numrows, numcols);
 
 tc.assumeEqual(rank(G), numrows, ...
-    'Such a random channel matrix should have full column rank.');
+    'Such a random channel matrix should have full row rank.');
 
 % Method under test
 Q = MIMOCapacity.computeQTTransform(G);
