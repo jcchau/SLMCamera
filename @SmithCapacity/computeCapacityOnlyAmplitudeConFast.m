@@ -190,6 +190,11 @@ while(true)
     if(SmithCapacity.checkCorollary1(A, poi, voi, I_Fo))
         C = I_Fo;
         warning(ws)
+        
+        % Save the result before returning (for future improvements)
+        savefilename = sprintf('smith-%s-%4.6f.mat', date, Alim);
+        save(savefilename, 'Alim', 'n', 'C');
+        
         return;
     else
         % The current value of n is not optimal for A.
