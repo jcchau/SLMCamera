@@ -13,7 +13,6 @@ classdef MIMOCapacityLBUnifXTest < matlab.unittest.TestCase
         
         testApproximateUnifXLBForNegligibleNoiseAndFullColRankGScalar(tc)
         testApproximateUnifXLBForNegligibleNoiseAndFullColRankG2Indep(tc)
-        testApproximateUnifXLBForNegligibleNoiseAndFullColRankG3x2(tc)
         
         testGenerateReceivedPmfForUniformInput1D(tc)
         testGenerateReceivedPmfForUniformInput1DNoSignal(tc)
