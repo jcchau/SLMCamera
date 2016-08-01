@@ -28,7 +28,7 @@ for ii = 1:numcols
 end
 
 %% Method under test
-[Q, G_B] = MIMOCapacity.simplifyChannelMatrix(G);
+G_B = MIMOCapacity.simplifyChannelMatrix(G);
 
 %% Check that removeZeroRowsAndCols was run
 
@@ -60,17 +60,6 @@ elseif(numrows-num_zero_rows == 1)
         ['Since we have only one non-zero row, the method under test ' ...
         'should sum all of the rows together in Step B.']);
 end % if-elseif
-
-%% Quick checks on Q
-
-tc.verifyEqual(size(Q,2), rank(G_B), ...
-    ['The Q^T Transform should yield only as many receivers as the ' ...
-    'rank of G_B.']);
-
-% Check that the calculated Q' Transform is invertible.
-tc.verifyEqual(Q*(Q'*G_B), G_B, 'AbsTol', 1e-13, ...
-    'Multiplying by Q should undo the Q^T transform.');
-
 
 end
 

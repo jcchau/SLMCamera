@@ -52,7 +52,7 @@ classdef MIMOCapacity
         nats = calculateDiffEntropyOfMVGaussian(K)
         
         % To remove extra dimensions from the channel matrix.
-        [Q, G_B] = simplifyChannelMatrix(G)
+        G_B = simplifyChannelMatrix(G)
         Q = computeQTTransform(G)
         
     end % methods(Static)

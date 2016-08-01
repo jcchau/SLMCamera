@@ -1,12 +1,9 @@
-function [Q, G_B] = simplifyChannelMatrix(G)
+function G_B = simplifyChannelMatrix(G)
 % simplifyChannelMatrix applies the process in lab book #4, p.121-127 to
 % reduce the number of dimensions in the channel matrix G.
 %
-%   [Q, G_B] = MIMOCapacity.simplifyChannelMatrix(G)
+%   G_B = MIMOCapacity.simplifyChannelMatrix(G)
 %
-% Q is the matrix that G_B is multiplied by in the "Q^T transform" to
-%   reduce the number of dimensions used to represent the received signals
-%   to the rank of the channel matrix G_B.  
 % G_B is the simplified channel matrix after step B on p.121 of lab book
 %   #4.  It is the channel matrix G with zero rows and columns removed and
 %   with the columns that are multiples of each other combined.  
@@ -80,8 +77,10 @@ G_B = G_B(:, 1:num_cols_GB);
 clear n_r n_t normalized_GB
 
 %% Step C: compute Q for the Q^T transform
+% Skipped here because we may want to perform Step A and B without Step C.
+% The Q' Transform can be computed from G_B separately.  
 
-Q = MIMOCapacity.computeQTTransform(G_B);
+%Q = MIMOCapacity.computeQTTransform(G_B);
 
 end
 

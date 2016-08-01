@@ -27,23 +27,12 @@ end % for ii
 % columns to get back to G_B_expected.  
 
 %% Method under test
-[Q, G_B] = MIMOCapacity.simplifyChannelMatrix(G);
+G_B = MIMOCapacity.simplifyChannelMatrix(G);
 
 %% Check G_B
 
 tc.verifyEqual(G_B, G_B_expected, 'AbsTol', 1e-15, ...
     'The calculated G_B does not match the expected G_B.');
-
-%% Quick checks on Q
-
-rank_G_B_expected = rank(G_B_expected);
-tc.verifyEqual(size(Q,2), rank_G_B_expected, ...
-    ['The Q^T Transform should yield only as many receivers as the ' ...
-    'rank of G_B.']);
-
-% Check that the calculated Q' Transform is invertible.
-tc.verifyEqual(Q*(Q'*G_B), G_B, 'AbsTol', 1e-13, ...
-    'Multiplying by Q should undo the Q^T transform.');
 
 end
 

@@ -9,8 +9,14 @@ function Q = computeQTTransform(G)
 %   Q = computeQTTransform(G)
 %
 % G is the channel matrix for which Q is generated.  
-%
 % Q is the matrix whose transpose is used in the Q^T transform.  
+%
+% I recommend simplifying G using MIMOCapacity.simplyChannelMatrix before
+% passing G to this function.  Although the Q' Transform should also get
+% rid of zero rows and columns, simplifyChannelMatrix can combine
+% transmitters in a way that this method can't.  
+%
+% Special case: if G is all zeros, Q will have zero columns.  
 
 [n_r, n_t] = size(G);
 
