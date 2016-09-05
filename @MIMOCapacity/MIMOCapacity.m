@@ -55,6 +55,8 @@ classdef MIMOCapacity
         G_B = simplifyChannelMatrix(G)
         Q = computeQTTransform(G)
         
+        [umin, umax] = computeUExtremes(F, xmax)
+        
     end % methods(Static)
     
 end
