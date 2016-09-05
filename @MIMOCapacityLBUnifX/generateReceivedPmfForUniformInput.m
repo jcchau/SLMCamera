@@ -109,13 +109,12 @@ end
 % noise standard deviation for each receiver element.
 stddev_noise_out = sqrt(variance_noise_out);
 
-% Determine the maximum value of G*x (the maximum received signals when
-% excluding noise).
-Gx_max = G * repmat(x_max, n_t, 1);
+% Determine the minimum and maximum received signal without noise.
+[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
 
 % we clip the PMF of y from y_min to y_max in our appoximation
-y_min = -5 * stddev_noise_out; % n_r element column matrix
-y_max = Gx_max + 5*stddev_noise_out; % n_r element column matrix
+y_min = umin -5 * stddev_noise_out; % n_r element column matrix
+y_max = umax + 5*stddev_noise_out; % n_r element column matrix
 delta = (y_max-y_min) ./ bins_per_dimension';
 
 % Allocate a n_r dimension matrix to store the hit counts.
