@@ -17,7 +17,7 @@ tc.verifyEqual(size(W), [numrows, numcols], ...
 % Check that each column is orthogonal.
 for ii = 1:numcols
     for jj = 1:ii-1
-        tc.verifyEqual(dot(W(:,ii), W(:,jj)), 0, 'AbsTol', 1e-15, ...
+        tc.verifyEqual(dot(W(:,ii), W(:,jj)), 0, 'AbsTol', 1e-14, ...
             sprintf('Columns %d and %d are not orthogonal.', ii, jj));
     end
 end
@@ -25,7 +25,7 @@ end
 % Check that each column is normalized.
 for ii = 1:numcols
     tc.verifyEqual(norm(W(:,ii)), 1, 'AbsTol', 1e-15, ...
-        sprintf('Column %d is not orthogonal.', ii));
+        sprintf('Column %d is not normalized.', ii));
 end
 
 % Check that each column of V can be represented as a linear combination of
@@ -34,7 +34,7 @@ for ii = 1:numcols
     v = V(:,ii);
     inBasisW = W' * v;
     backToOrigBasis = W * inBasisW;
-    tc.verifyEqual(backToOrigBasis, v, 'AbsTol', 1e-14, ...
+    tc.verifyEqual(backToOrigBasis, v, 'AbsTol', 1e-13, ...
         sprintf( ...
         'Column %d of V cannot be represented as the columns of W.', ii));
 end
