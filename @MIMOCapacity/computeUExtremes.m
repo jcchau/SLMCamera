@@ -25,7 +25,7 @@ function [umin, umax] = computeUExtremes(F, xmax)
 %
 % This algorithm is described in lab book #4, p. 129-133.
 
-[n_r, ~] = size(F,1);
+n_r = size(F,1);
 
 % Take into account xmax. 
 % This step allows us to normalize the range of x for the rest of this

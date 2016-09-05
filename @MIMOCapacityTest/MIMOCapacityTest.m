@@ -50,6 +50,9 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testComputeQTTransformDependentRx(tc)
         testSimplifyChannelMatrixStepA(tc)
         testSimplifyChannelMatrixStepB(tc)
+        
+        testComputeUExtremesEmpirically(tc)
+        
     end % methods(Test)
     
 end
