@@ -19,7 +19,8 @@ if(isequal(G,0))
 end
 
 % Apply the Q' transform
-G = Q' * G';
+Q = MIMOCapacity.computeQTTransform(G);
+G = Q' * G;
 % After the Q'-transform, the channel matrix has full row rank.  
 
 [n_r, n_t] = size(G);
