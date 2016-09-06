@@ -53,6 +53,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         
         testComputeUExtremesEmpirically(tc)
         
+        testComputeCapacityLBUnifXFullRankHighSNR(tc)
+        
     end % methods(Test)
     
 end
