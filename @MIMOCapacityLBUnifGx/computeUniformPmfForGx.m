@@ -52,9 +52,6 @@ end
 if(~isequal(size(y_min), [1, n_r]))
     error('Parameter y_min must be a n_r-element row vector.');
 end
-if(any(y_min>0))
-    warning('The PMF excludes the y = 0 point.');
-end
 
 % delta
 if(~isequal(size(delta), [1, n_r]))
@@ -75,11 +72,18 @@ if(any(nbins < 1))
     error('Parameter nbins should be a whole number.');
 end
 
-% check that G*x_max is included in the PMF
-Gx_max = G*x_max; % column vector
+%% check that y_min and y_max include every possible signal w/o noise value
+[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
+if(any(y_min'>umin))
+    warning(['y_min is larger than umin: ' ...
+        'the PMF does not include all possible values of ' ...
+        'the signal without noise.']);
+end
 y_max = y_min + nbins .* delta; % row vector
-if(any(Gx_max' > y_max))
-    warning('The PMF excludes the y = G*x_max point.');
+if(any(y_max'<umax))
+    warning(['y_max is smaller than umax: ' ...
+        'the PMF does not include all possible values of ' ...
+        'the signal without noise.']);
 end
 
 %% determine whether each bin of the PMF is reachable

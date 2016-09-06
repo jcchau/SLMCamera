@@ -49,9 +49,6 @@ end
 if(~isequal(size(y_min), [1, n_r]))
     error('Parameter Y_MIN must be a n_r element row vector.');
 end
-if(any(y_min>0))
-    warning('The PMF excludes the y = 0 point.');
-end
 
 % delta
 if(~isequal(size(delta), [1, n_r]))
@@ -72,45 +69,18 @@ if(any(nbins<1))
     error('PARAMETER NBINS should be a whole number.');
 end
 
-% check that G*x_max is included in the PMF
-Gx_max = G*x_max; % column vector
-y_max = y_min + nbins .* delta; % row vector
-if(any(Gx_max' > y_max))
-    warning('The PMF excludes the y = G*x_max point.');
+%% check that y_min and y_max include every possible signal w/o noise value
+[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
+if(any(y_min'>umin))
+    warning(['y_min is larger than umin: ' ...
+        'the PMF does not include all possible values of ' ...
+        'the signal without noise.']);
 end
-
-%% Check that G*x_max is at least close to the maximum-value corner of its
-% bin.  Otherwise, it may be very improbable to hit the bin that contains
-% G*x_max.
-
-% Transpose Gx_max for convertPointToSubscriptIndex, which expects each
-% point to be represented by a row in input y.  
-index_Gx_max = MIMOCapacity.convertPointToSubscriptIndex(Gx_max', ...
-    y_min, delta, nbins);
-
-% subscript index of y=0
-index_zero = MIMOCapacity.convertPointToSubscriptIndex(zeros(1, n_r), ...
-    y_min, delta, nbins);
-
-% lower bound of the bin that contains Gx_max
-lb_bin_Gx_max = y_min + (index_Gx_max-1) .* delta;
-
-% Position of Gx_max within its bin along each dimension, normalized so
-% that 0 means Gx_max is at the lower bound of the bin and 1 means that
-% Gx_max is at the upper bound of the bin.  
-normalized_pos_of_Gx_max_within_bin = (Gx_max' - lb_bin_Gx_max) ./ delta;
-
-% If in any dimension of y, the bin index_Gx_max does not contain the
-% entire range of possible G*x, then ensure that Gx_max is near the upper
-% bound of the bin.  Otherwise, if the distribution of G*x barely touches
-% bin index_Gx_max, it may take a very long time for the Monte Carlo
-% simulation to acquire enough hits in bin index_Gx_max.  
-if(any(index_Gx_max > index_zero & ...
-        normalized_pos_of_Gx_max_within_bin < 0.9))
-    warning(['Gx_max does not extend far enough into its bin; ' ...
-        'the probability of hitting this bin may be low, which may ' ...
-        'cause this Monte Carlo simulation to take a very long time ' ...
-        'to complete.']);
+y_max = y_min + nbins .* delta; % row vector
+if(any(y_max'<umax))
+    warning(['y_max is smaller than umax: ' ...
+        'the PMF does not include all possible values of ' ...
+        'the signal without noise.']);
 end
 
 %% initial setup
@@ -137,6 +107,12 @@ hits = zeros([nbins, 1]);
 % pre-compute the weights needed to convert a row of index_x into a linear
 % index (needed to index elements in arbitrary-dimension matrices).
 indexing_weights = MIMOCapacity.convertToLinearIndexWeights(nbins);
+
+% Transpose Gx_max for convertPointToSubscriptIndex, which expects each
+% point to be represented by a row in input y.  
+Gx_max = G * x_max;
+index_Gx_max = MIMOCapacity.convertPointToSubscriptIndex(Gx_max', ...
+    y_min, delta, nbins);
 
 % Pre-compute the matrix index for the bin corresponding to G*x for the
 % maximum value of x.  This way, it's more efficient to check whether we

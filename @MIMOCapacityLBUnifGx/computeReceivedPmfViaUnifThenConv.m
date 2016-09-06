@@ -20,8 +20,9 @@ function [pmf, delta] = computeReceivedPmfViaUnifThenConv( ...
 %   vector.
 % sigma_w (n_r-element column vector) is the standard deviation of w.  
 % ns (scalar) determines the domain of the PMF generated.  Along each
-%   dimension d of y, where Gx_max = G*x_max, the PMF is computed for
-%   -ns*sigma_w(d) <= y(d) <= Gx_max(d) + ns*sigma_w(d).  
+%   dimension d of y, where umin and umax are the min and max values of the
+%   noise-free component of the received signal, the PMF is computed for
+%   umin-ns*sigma_w(d) <= y(d) <= umax + ns*sigma_w(d).
 % nbins (n_r-element column vector) is the number of bins along each
 %   dimension of the output pmf.  
 
@@ -65,9 +66,9 @@ end
 
 %% figure out how big everything should be
 
-Gx_max = G*x_max;
-y_min = -ns .* sigma_w;
-y_max = Gx_max + ns .* sigma_w;
+[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
+y_min = umin - ns .* sigma_w;
+y_max = umax + ns .* sigma_w;
 delta = (y_max - y_min) ./ nbins;
 
 if(any(delta == 0))
@@ -88,16 +89,16 @@ end
 pmf = zeros([nbins' 1]);
 
 % Only have computeUniformPmfForGx compute the pmf for bins in the
-% rectangular prism between 0 and Gx_max because the computation time for
+% rectangular prism between umin and umax because the computation time for
 % that method is proportional to the number of bins (and because that
 % method is relatively slow).  
 
 % Index of 0 and Gx_max in the pmf for this method
 % (computeReceivedPmfViaUnifThenConv).
 i_unif_min = (MIMOCapacity.convertPointToSubscriptIndex( ...
-    zeros(1, n_r), y_min', delta', nbins'))';
+    umin', y_min', delta', nbins'))';
 i_unif_max = (MIMOCapacity.convertPointToSubscriptIndex( ...
-    Gx_max', y_min', delta', nbins'))';
+    umax', y_min', delta', nbins'))';
 
 % Parameters for method computeUniformPmfForGx so that the bins in that
 % method align with the bins in this method and so we don't process more
@@ -112,7 +113,8 @@ end % d = 1:n_r
 
 %% compute the uniform PMF for G*x
 
-pmf(subpmf_indices{:}) = MIMOCapacityLBUnifGx.computeUniformPmfForGx(G, x_max, ...
+pmf(subpmf_indices{:}) = MIMOCapacityLBUnifGx.computeUniformPmfForGx( ...
+    G, x_max, ...
     unif_y_min', delta', unif_nbins');
 
 %% add the Gaussian noise to the PMF
