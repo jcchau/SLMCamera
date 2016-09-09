@@ -43,7 +43,6 @@ classdef MIMOCapacity
         msi = convertPointToSubscriptIndex(y, ymin, delta, nbins)
         
         ub_nats = computeCapacityUBElMoslimany2014(G, x_max, sigma_w)
-        ub_nats = computeCapacityUBMaxVariance(G, x_max, sigma_w)
         lb_nats = computeCapacityLBMRC(G, x_max, sigma_w)
         [lb_nats_conservative, lb_nats] = ...
             computeCapacityLBUnifX(G, x_max, sigma_w)
