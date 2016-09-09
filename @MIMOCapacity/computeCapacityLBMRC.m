@@ -12,6 +12,9 @@ function lb_nats = computeCapacityLBMRC(G, x_max, sigma_w)
 % sigma_w (scalar) is the the standard deviation of the noise w (along each
 %   dimension). 
 
+% Don't bother running simplifyChannelMatrix.
+% The simplifications would not speed up this method.  
+
 [~, n_t] = size(G);
 
 Gx_max = G * repmat(x_max, n_t, 1);

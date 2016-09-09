@@ -11,6 +11,9 @@ function ub_nats = computeCapacityUBElMoslimany2014(G, x_max, sigma_w)
 % x_max (scalar) is the maximum value of x.
 % sigma_w (scalar) is the standard deviation of the noise w.
 
+% Don't bother running simplifyChannelMatrix.
+% The simplifications would not noticeably speed up this method.  
+
 [~, n_t] = size(G);
 
 Gx_max = G * repmat(x_max, n_t, 1);
