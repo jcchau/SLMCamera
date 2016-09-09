@@ -38,19 +38,8 @@ Q = MIMOCapacityLBUnifX.gramSchmidt(G);
 
 A = Q'*G;
 
-% Sanity check that the noise can be considered negligible.
-Ax_max = A * repmat(x_max,n_t,1);
-if(any(abs(Ax_max) < 10*sigma_w))
-    error(['MIMOCapacityLBUnifX:approximateUnifXLBForNegligibleNoise' ...
-        'AndFullColRankG:SignificantNoise'], ...
-        ['At least one element of Q''*G*x is not much greater than ' ...
-        'sigma_w. It''s not reasonable to assume that the noise is ' ...
-        'negligible.']);
-end
-% Though even if the sanity check passes, the noise can still be considered
-% significant.  Fortunately, the lower bound on capacity would still be
-% valid, just less tight (because we end up underestimating h(Q'*G*x+Q'*w)
-% as h(Q'*G*x)).
+% Skip checking that the noise is negligible since the lower bound on
+% capacity would still be valid even with significant noise.  
 
 % Derived in lab book #4, p.111-112.
 h_x = n_t * log(x_max);
