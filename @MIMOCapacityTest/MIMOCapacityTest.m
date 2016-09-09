@@ -56,6 +56,8 @@ classdef MIMOCapacityTest < matlab.unittest.TestCase
         testComputeCapacityLBUnifXFullRankHighSNR(tc)
         testComputeCapacityLBUnifXFullRankLowSNR(tc)
         
+        testComputeCapacityLBUnifGxAgainstUnifX(tc)
+        
     end % methods(Test)
     
 end
