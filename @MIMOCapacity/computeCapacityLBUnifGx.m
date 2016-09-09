@@ -2,6 +2,22 @@ function lb_nats = computeCapacityLBUnifGx(G, x_max, sigma_w)
 %COMPUTECAPACITYLBUNIFGX Summary of this function goes here
 %   Detailed explanation goes here
 
+%% Prepare the channel matrix
+
+G = MIMOCapacity.simplifyChannelMatrix(G);
+
+% Handle special case where G is 0.
+if(isequal(G,0))
+    lb_nats = 0;
+    return
+end
+
+% Apply Q' transform
+Q = MIMOCapacity.computeQTTransform(G);
+G = Q' * G;
+
+%% Compute the lower bound on capacity
+
 [n_r, n_t] = size(G);
 
 sigma_w = repmat(sigma_w, n_r, 1);
