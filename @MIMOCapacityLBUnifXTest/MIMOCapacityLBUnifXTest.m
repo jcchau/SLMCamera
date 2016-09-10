@@ -23,6 +23,8 @@ classdef MIMOCapacityLBUnifXTest < matlab.unittest.TestCase
         
         gramSchmidtTest(tc)
         
+        testApproximateUnifXLBForNegligibleNoiseAndFullColRankGUnitaryT(tc)
+        
     end
     
 end
