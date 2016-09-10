@@ -18,18 +18,19 @@ G = Q' * G;
 
 %% Compute the lower bound on capacity
 
-[n_r, n_t] = size(G);
+n_r = size(G, 1);
 
 sigma_w = repmat(sigma_w, n_r, 1);
 
-max_nbins_linprog = 6e2; % A tradeoff between speed and precision: 6e4
+max_nbins_linprog = 6e4; % A tradeoff between speed and precision: 6e4
 max_nbins_mem = 1e9/8/5;
 
 % TODO: move this max_nbins_linprog feature in to MIMOCapacityLBUnifGx.
-Gx_max = G*repmat(x_max, n_t, 1);
+[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
+usize = umax-umin;
 
 expected_nbins_linprog = ceil(prod( ...
-    max_nbins_linprog^(1/n_r) .* (12*sigma_w+Gx_max) ./ Gx_max ));
+    max_nbins_linprog^(1/n_r) .* (12*sigma_w+usize) ./ usize ));
 
 max_nbins = min(max_nbins_mem, expected_nbins_linprog);
 
