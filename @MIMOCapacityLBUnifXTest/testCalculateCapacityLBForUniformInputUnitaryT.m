@@ -3,8 +3,13 @@ function testCalculateCapacityLBForUniformInputUnitaryT(tc)
 % change when an unitary transform is applied to G (when x_max is the same
 % for all transmitters).
 
-n_r = randi(20);
-n_t = n_r;
+% Here we ensure that G has full *row* rank so we don't have to apply the
+% Q'-transform.  Otherwise, we would need to apply the Q'-transform to
+% ensure that the received constellation is not "flat" in any direction
+% (which would mean that the PMF bin sizes would necessarily be too large
+% along that dimension).
+n_t = randi(20);
+n_r = randi(n_t);
 G = rand(n_r, n_t);
 
 sigma_w = rand();
