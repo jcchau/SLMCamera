@@ -14,6 +14,9 @@ classdef MIMOCapacityLBUnifGxTest < matlab.unittest.TestCase
         testComputeUniformPmfForGxIdenticalRowsOfG(tc)
         
         testGenerateUniformPmfForGxGFromP27(tc)
+        
+        testCalculateMutualInfoWithUnifGxUnitaryT(tc)
+        
     end
     
 end
