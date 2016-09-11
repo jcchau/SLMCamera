@@ -31,7 +31,13 @@ G_B = MIMOCapacity.simplifyChannelMatrix(G);
 
 %% Check G_B
 
-tc.verifyEqual(G_B, G_B_expected, 'AbsTol', 1e-15, ...
+% Before checking, if G_B_expected only has 1 row, then all of the columns
+% should be combined together by the method under test.
+if(numrows==1)
+    G_B_expected = sum(G_B_expected);
+end
+
+tc.verifyEqual(G_B, G_B_expected, 'AbsTol', 1e-14, ...
     'The calculated G_B does not match the expected G_B.');
 
 end
