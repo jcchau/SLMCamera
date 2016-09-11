@@ -13,6 +13,7 @@ classdef MIMOCapacityLBUnifGx
         [pmf, reachable] = computeUniformPmfForGx(G, x_max, ...
             y_min, delta, nbins)
         pmf = generateUniformPmfForGx(G, x_max, y_min, delta, nbins)
+        pmf = fillUniformPmfForGx(G, x_max, y_min, delta, nbins)
     end % methods(Static)
     
 end
