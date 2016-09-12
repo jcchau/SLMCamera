@@ -57,7 +57,7 @@ lb_natsB = MIMOCapacityLBUnifGx.calculateMutualInfoWithUnifGx( ...
 
 %% Compare
 
-tc.verifyEqual(lb_natsB, lb_natsA, 'RelTol', 0.02);
+tc.verifyEqual(lb_natsB, lb_natsA, 'RelTol', 0.01);
 
 end
 
