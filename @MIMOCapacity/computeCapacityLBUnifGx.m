@@ -22,17 +22,13 @@ n_r = size(G, 1);
 
 sigma_w = repmat(sigma_w, n_r, 1);
 
-max_nbins_linprog = 6e4; % A tradeoff between speed and precision: 6e4
-max_nbins_mem = 1e9/8/5;
-
-% TODO: move this max_nbins_linprog feature in to MIMOCapacityLBUnifGx.
-[umin, umax] = MIMOCapacity.computeUExtremes(G, x_max);
-usize = umax-umin;
-
-expected_nbins_linprog = ceil(prod( ...
-    max_nbins_linprog^(1/n_r) .* (12*sigma_w+usize) ./ usize ));
-
-max_nbins = min(max_nbins_mem, expected_nbins_linprog);
+% Maximum number of bins to use for the PMF.
+% Primarily constrained by the amount of memory available.  
+% Here, we're assuming 1GB, with each PMF bin taking up 8 bytes, and
+% expecting up to 5 matrices of the size of the PMF.  
+% Can increase max_nbins when we transition to the SCC computers with more
+% memory.  
+max_nbins = 1e9/8/5;
 
 lb_nats = MIMOCapacityLBUnifGx.calculateMutualInfoWithUnifGx( ...
     G, x_max, sigma_w, max_nbins);
